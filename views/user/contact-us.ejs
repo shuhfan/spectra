@@ -1,0 +1,117 @@
+
+    <div class="page-wrapper">
+
+        <%-include('../partials/userHeader')%>
+
+
+        <section class="page-title" style="background-image: url(images/background/page-title.jpg);">
+            <div class="auto-container">
+                <div class="title-outer text-center">
+                    <h1 class="title">Contact Us</h1>
+                    <ul class="page-breadcrumb">
+                        <li><a href="/">Home</a></li>
+                        <li>Contact Us</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="contact-details">
+            <div class="container pb-70">
+                <div class="row">
+                    <div class="col-xl-7 col-lg-6">
+                        <div class="sec-title">
+                            <span class="sub-title">Send us an email</span>
+                            <h2>Feel free to reach out</h2>
+                        </div>
+        
+                        <form id="contact_form" name="contact_form" action="https://yourwebsite.com/sendmail.php" method="post">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="mb-3">
+                                        <input name="form_name" class="form-control" type="text" placeholder="Enter Name">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb-3">
+                                        <input name="form_email" class="form-control required email" type="email" placeholder="Enter Email">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="mb-3">
+                                        <input name="form_subject" class="form-control required" type="text" placeholder="Enter Subject">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb-3">
+                                        <input name="form_phone" class="form-control" type="text" placeholder="Enter Phone">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <textarea name="form_message" class="form-control required" rows="7" placeholder="Enter Message"></textarea>
+                            </div>
+                            <div class="mb-5" style="display: flex;">
+                                <input name="form_botcheck" class="form-control" type="hidden" value />
+                                <button type="submit" class="theme-btn btn-style-one" data-loading-text="Please wait...">
+                                    <span class="btn-title">Send Message</span>
+                                </button>
+                                <button type="reset" class="theme-btn btn-style-one ml-25"><span class="btn-title">Reset</span></button>
+                            </div>
+                        </form>
+        
+                    </div>
+                    <div class="col-xl-5 col-lg-6">
+                        <div class="contact-details__right">
+                            <div class="sec-title">
+                                <span class="sub-title">Need any help?</span>
+                                <h2>Get in touch with us</h2>
+                                <div class="text">We are always here to help with any geotechnical, environmental, or water treatment inquiries. Reach out to discuss your project needs.</div>
+                            </div>
+                            <ul class="list-unstyled contact-details__info">
+                                <li>
+                                    <div class="icon">
+                                        <span class="lnr-icon-phone-plus"></span>
+                                    </div>
+                                    <div class="text">
+                                        <h6 class="mb-1">Have any questions?</h6>
+                                        <a href="tel:+919188330335"><span>Free</span> +91 9188330335</a>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="icon">
+                                        <span class="lnr-icon-envelope1"></span>
+                                    </div>
+                                    <div class="text">
+                                        <h6 class="mb-1">Write to us</h6>
+                                        <a href="mailto:info@specterra.in">info@specterra.in</a>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="icon" >
+                                        <span class="lnr-icon-location"></span>
+                                    </div>
+                                    <div class="text">
+                                        <h6 class="mb-1">Visit us</h6>
+                                        <span>18/372J, Ramankeriyil Building, Chengalam South, Kottayam, Kerala, 686022</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="map-section py-0">
+            <iframe class="map w-100" src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=18/372J,%20Ramankeriyil%20Building,%20Kottayam,%20Kerala,%20India&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
+        </section>
+        
+
+
+        <%-include('../partials/userFooter')%>
+
+    </div>

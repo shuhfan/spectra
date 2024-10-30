@@ -1,0 +1,92 @@
+
+
+<%-include('../partials/adminTopBar')%>
+		
+<%-include('../partials/adminNav')%>
+
+    
+<!-- ============================================================== -->
+<!-- 						Content Start	 						-->
+<!-- ============================================================== -->
+<div class="row page-header">
+        <div class="col-lg-6 align-self-center ">
+          <h2>Add Careers</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active">Add Careers</li>
+            </ol>
+        </div>
+        
+</div>
+
+
+<section class="main-content">
+
+	
+    <div class="container mb-5">
+        <form id="add-career-form" method="post" action="/admin/add-careers">
+            <div class="mb-3">
+                <label for="job-title" class="form-label">Job Title:</label>
+                <input type="text" id="job-title" name="job-title" class="form-control" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="company-name" class="form-label">Company Name:</label>
+                <input type="text" id="company-name" name="company-name" class="form-control" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="job-description" class="form-label">Job Description:</label>
+                <textarea id="job-description" name="job-description" class="form-control" required></textarea>
+            </div>
+            
+            <div class="mb-3">
+                <label for="requirements" class="form-label">Requirements:</label>
+                <textarea id="requirements" name="requirements" class="form-control" required></textarea>
+            </div>
+            
+            <div class="mb-3">
+                <label for="location" class="form-label">Location:</label>
+                <input type="text" id="location" name="location" class="form-control" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="salary-range" class="form-label">Salary Range:</label>
+                <input type="text" id="salary-range" name="salary-range" class="form-control" required>
+            </div>
+        
+            <div class="mb-3">
+                <label for="contact-email" class="form-label">Contact Email:</label>
+                <input type="email" id="contact-email" name="contact-email" class="form-control" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="employment-type" class="form-label">Employment Type:</label>
+                <select id="employment-type" name="employment-type" class="form-select" required>
+                    <option value="full-time">Full-time</option>
+                    <option value="part-time">Part-time</option>
+                    <option value="internship">Internship</option>
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="application-deadline" class="form-label">Application Deadline:</label>
+                <input type="date" id="application-deadline" name="application-deadline" class="form-control" required>
+            </div>
+            
+            <button class="btn btn-success btn-block" type="submit">Submit</button>
+        </form>
+    </div>
+	
+		
+		
+	<footer class="footer">
+		<span>Copyright &copy;  2024 Specterra Geotech Private Limited. All rights reserved.</span>
+	</footer>
+
+</section>
+<!-- ============================================================== -->
+<!-- 						Content End		 						-->
+<!-- ============================================================== -->
+
+

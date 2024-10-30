@@ -13,6 +13,11 @@ userRouter.use(session({
     cookie : {secure:false}
 }))
 
+userRouter.use((req, res, next) => {
+  res.locals.userId = req.session.user_id; 
+  next();
+});
+
 userRouter.use((req, res, next)=> {
     const currentUrl = req.originalUrl;
     res.locals.pathname = req.path;
@@ -27,7 +32,16 @@ userRouter.set('view engine','ejs')
 userRouter.set('views','./views/user')
 userRouter.set('layout','../layouts/layout')
 
-userRouter.get('/',auth.isLogout,userController.loadHome)
+userRouter.get('/',userController.loadHome)
+userRouter.get('/login',auth.isLogout,userController.loadLogin)
+userRouter.get('/signup',auth.isLogout,userController.loadSignup)
+userRouter.get('/logout',userController.logout)
+userRouter.get('/about-us',userController.loadAboutUs)
+userRouter.get('/contact-us',userController.loadContactUs)
 
+
+
+userRouter.post('/signup',userController.signUp)
+userRouter.post('/login',userController.login)
 
 module.exports = userRouter;

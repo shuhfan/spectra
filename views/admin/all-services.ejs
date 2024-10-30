@@ -1,0 +1,65 @@
+
+
+<%-include('../partials/adminTopBar')%>
+		
+<%-include('../partials/adminNav')%>
+
+    
+<!-- ============================================================== -->
+<!-- 						Content Start	 						-->
+<!-- ============================================================== -->
+<div class="row page-header">
+        <div class="col-lg-6 align-self-center ">
+          <h2>All Service</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active">All Service</li>
+            </ol>
+        </div>
+        
+</div>
+
+
+<section class="main-content">
+
+	
+   
+        
+    <div class="row">
+        <% services.forEach(service => { %>
+            <div class="col-md-4">
+                <div class="card service-card">
+                    <!-- Display the service image -->
+                    <img src="/uploads/<%= service.image %>" class="card-img-top" alt="<%= service.title %>">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= service.title %></h5>
+                        <!-- Truncate the description to 100 characters -->
+                        <p class="card-text">
+                            <%= service.description.length > 100 ? service.description.substring(0, 100) + '...' : service.description %>
+                        </p>
+                        <p class="card-text"><strong>Amount:</strong> $<%= service.amount %></p>
+                        <!-- Link to delete service with the service ID -->
+                        <a href="/admin/delete-services/<%= service.id %>" class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+    
+    
+    
+	
+
+        
+
+
+	<footer class="footer">
+		<span>Copyright &copy;  2024 Specterra Geotech Private Limited. All rights reserved.</span>
+	</footer>
+
+</section>
+<!-- ============================================================== -->
+<!-- 						Content End		 						-->
+<!-- ============================================================== -->
+
+

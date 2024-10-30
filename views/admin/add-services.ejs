@@ -1,0 +1,57 @@
+
+
+<%-include('../partials/adminTopBar')%>
+		
+<%-include('../partials/adminNav')%>
+
+    
+<!-- ============================================================== -->
+<!-- 						Content Start	 						-->
+<!-- ============================================================== -->
+<div class="row page-header">
+        <div class="col-lg-6 align-self-center ">
+          <h2>Add Service</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active">Add Service</li>
+            </ol>
+        </div>
+        
+</div>
+
+
+<section class="main-content">
+
+	
+    <form action="/admin/add-services" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title">Service Title:</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="amount">Amount:</label>
+            <input type="number" class="form-control" id="amount" name="amount" required>
+        </div>
+        <div class="form-group">
+            <label for="image">Upload Image:</label>
+            <input type="file" class="form-control-file" id="image" name="image" accept="image/*" required>
+        </div>
+        <button type="submit" class="btn btn-success btn-block">Add Service</button>
+    </form>
+	
+		
+		
+	<footer class="footer">
+		<span>Copyright &copy;  2024 Specterra Geotech Private Limited. All rights reserved.</span>
+	</footer>
+
+</section>
+<!-- ============================================================== -->
+<!-- 						Content End		 						-->
+<!-- ============================================================== -->
+
+

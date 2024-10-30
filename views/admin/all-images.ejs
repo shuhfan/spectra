@@ -1,0 +1,54 @@
+
+
+<%-include('../partials/adminTopBar')%>
+		
+<%-include('../partials/adminNav')%>
+
+    
+<!-- ============================================================== -->
+<!-- 						Content Start	 						-->
+<!-- ============================================================== -->
+<div class="row page-header">
+        <div class="col-lg-6 align-self-center ">
+          <h2>All Images</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active">All Images</li>
+            </ol>
+        </div>
+        
+</div>
+
+
+<section class="main-content">
+
+	
+    <div class="container mt-5">
+        
+        <div class="row">
+            <% images.forEach(image => { %>
+            <div class="col-md-3 col-sm-6">
+                <div class="card mb-4">
+                    <img src="/uploads/<%= image.image_path %>" class="card-img-top gallery-img" alt="<%= image.title %>">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= image.title %></h5>
+                        <a href="/admin/delete-images/<%= image.id %>"  class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+	
+		
+		
+	<footer class="footer">
+		<span>Copyright &copy;  2024 Specterra Geotech Private Limited. All rights reserved.</span>
+	</footer>
+
+</section>
+<!-- ============================================================== -->
+<!-- 						Content End		 						-->
+<!-- ============================================================== -->
+
+

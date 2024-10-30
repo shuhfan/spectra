@@ -1,0 +1,71 @@
+
+
+<%-include('../partials/adminTopBar')%>
+		
+<%-include('../partials/adminNav')%>
+
+    
+<!-- ============================================================== -->
+<!-- 						Content Start	 						-->
+<!-- ============================================================== -->
+<div class="row page-header">
+        <div class="col-lg-6 align-self-center ">
+          <h2>User Management</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active">User Management</li>
+            </ol>
+        </div>
+        
+</div>
+
+
+<section class="main-content">
+
+	
+		<main class="content p-0" style="overflow: scroll;">
+            <div class="container-fluid p-0">
+               
+                <div class="col-12 col-lg-12 col-xxl-12 d-flex">
+                    <div class="card flex-fill w-100 overflow-scroll">
+                        <table class="table table-hover my-0">
+                            <thead class="text-center">
+                                <tr style="background-color: #ffffff;">
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Registered Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <% users.forEach(user => { %>
+                                    <tr>
+                                        <td><%= user.name %></td>
+                                        <td><%= user.email %></td>
+                                        <td><%= user.phone %></td>
+                                        <td><%= user.registered_date %></td>
+                                        <td>
+                                            <a href="/admin/users/delete/<%= user.id %>"><i class="fas fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>                
+            </div>
+        </main>
+	
+		
+		
+	<footer class="footer">
+		<span>Copyright &copy;  2024 Specterra Geotech Private Limited. All rights reserved.</span>
+	</footer>
+
+</section>
+<!-- ============================================================== -->
+<!-- 						Content End		 						-->
+<!-- ============================================================== -->
+
+

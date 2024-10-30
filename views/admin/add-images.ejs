@@ -1,0 +1,52 @@
+
+
+<%-include('../partials/adminTopBar')%>
+		
+<%-include('../partials/adminNav')%>
+
+    
+<!-- ============================================================== -->
+<!-- 						Content Start	 						-->
+<!-- ============================================================== -->
+<div class="row page-header">
+        <div class="col-lg-6 align-self-center ">
+          <h2>Add Images</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active">Add Images</li>
+            </ol>
+        </div>
+        
+</div>
+
+
+<section class="main-content">
+
+	
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Add Image to Gallery</h1>
+        <form action="/admin/add-images" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="imageTitle">Image Title:</label>
+                <input type="text" class="form-control" id="imageTitle" name="imageTitle" required>
+            </div>
+            <div class="form-group">
+                <label for="imageFile">Upload Image:</label>
+                <input type="file" class="form-control-file" id="imageFile" name="image" accept="image/*" required>
+            </div>
+            <button type="submit" class="btn btn-success btn-block">Add to Gallery</button>
+        </form>
+    </div>
+	
+		
+		
+	<footer class="footer">
+		<span>Copyright &copy;  2024 Specterra Geotech Private Limited. All rights reserved.</span>
+	</footer>
+
+</section>
+<!-- ============================================================== -->
+<!-- 						Content End		 						-->
+<!-- ============================================================== -->
+
+
