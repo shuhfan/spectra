@@ -22,7 +22,64 @@
 
 <section class="main-content">
 
-	
+	<style>
+        .service-card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow to each card */
+    border-radius: 8px;                       /* Rounded corners */
+    overflow: hidden;                          /* Ensures rounded corners work on all elements */
+    border: none;                              /* Remove default border */
+    margin-bottom: 20px;                       /* Adds spacing between cards */
+    transition: transform 0.2s;                /* Smooth hover effect */
+}
+
+.service-card:hover {
+    transform: translateY(-5px);               /* Elevates the card slightly on hover */
+}
+
+.card-img-top {
+    height: 200px;                             /* Set a fixed height for images */
+    width: 100%;                               /* Full width to cover the card */
+    object-fit: contain;                         /* Keeps the aspect ratio and fills the area */
+}
+
+.card-body {
+    padding: 20px;                             /* Adds padding inside the card */
+    background-color: #f8f9fa;                 /* Light background color */
+    text-align: center;
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    color: #555;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.btn-primary, .btn-danger {
+    width: 48%;                                /* Makes buttons side-by-side with equal width */
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+}
+
+
+
+    </style>
    
         
     <div class="row">
@@ -39,6 +96,7 @@
                         </p>
                         <p class="card-text"><strong>Amount:</strong> $<%= service.amount %></p>
                         <!-- Link to delete service with the service ID -->
+                        <a href="/admin/edit-services/<%= service.id %>" class="btn btn-primary">Edit</a>
                         <a href="/admin/delete-services/<%= service.id %>" class="btn btn-danger">Delete</a>
                     </div>
                 </div>

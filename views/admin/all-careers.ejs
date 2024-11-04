@@ -22,7 +22,55 @@
 
 <section class="main-content">
 
-	
+	<style>
+        /* General styling for career card */
+.card {
+    border: none;
+    border-radius: 8px;                       /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: transform 0.2s ease-in-out;   /* Smooth hover effect */
+}
+
+.card:hover {
+    transform: translateY(-5px);              /* Lift effect on hover */
+}
+
+.card-body {
+    padding: 20px;                            /* Padding inside the card */
+    background-color: #f8f9fa;                /* Light background color */
+}
+
+.card-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.card-body p {
+    margin: 5px 0;                            /* Spacing between information lines */
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.card-body p strong {
+    color: #444;
+}
+
+.btn-danger {
+    font-size: 0.9rem;
+    width: 100%;                              /* Full-width delete button */
+    background-color: #dc3545;
+    border: none;
+    margin-top: 15px;
+    transition: background-color 0.2s;
+}
+
+.btn-danger:hover {
+    background-color: #b52a3a;                /* Darker shade on hover */
+}
+
+    </style>
     
 
     <div class="container">

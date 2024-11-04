@@ -19,7 +19,72 @@
         
 </div>
 
+<style>
+    /* Container styling */
+.container {
+    max-width: 100%; /* Limit the width of the form */
+    margin: 0 ; /* Center the container */
+    padding: 20px; /* Add padding inside the container */
+    background-color: #ffffff; /* White background for the form */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
 
+/* General form styling */
+.mb-3 {
+    margin-bottom: 20px; /* Space between form groups */
+}
+
+.form-label {
+    font-weight: bold; /* Bold labels for clarity */
+    color: #333; /* Darker color for better readability */
+}
+
+.form-control, .form-select {
+    border-radius: 4px; /* Rounded corners for inputs and selects */
+    border: 1px solid #ddd; /* Light border color */
+    padding: 10px; /* Padding inside inputs and selects */
+    font-size: 1rem; /* Font size for inputs and selects */
+    width: 100%; /* Full width of the parent container */
+    box-sizing: border-box; /* Include padding and border in total width */
+}
+
+/* Textarea styling */
+textarea.form-control {
+    resize: vertical; /* Allow vertical resizing only */
+    min-height: 100px; /* Minimum height for textareas */
+}
+
+/* Button styling */
+.btn-block {
+    width: 100%; /* Full width button */
+    font-size: 1.1rem; /* Slightly larger font size for buttons */
+    font-weight: bold; /* Bold text on buttons */
+    padding: 12px; /* Padding inside buttons */
+    background-color: #28a745; /* Green background color */
+    color: #fff; /* White text color */
+    border: none; /* No border for buttons */
+    border-radius: 4px; /* Rounded corners for buttons */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.btn-block:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+.btn-block:focus {
+    outline: none; /* Remove default outline on focus */
+    box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.3); /* Add shadow on focus for visibility */
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px; /* Reduce padding on smaller screens */
+        margin-top: 20px; /* Add top margin to separate from top edge of viewport */
+    }
+}
+</style>
 <section class="main-content">
 
 	
@@ -56,8 +121,8 @@
             </div>
         
             <div class="mb-3">
-                <label for="contact-email" class="form-label">Contact Email:</label>
-                <input type="email" id="contact-email" name="contact-email" class="form-control" required>
+                <label for="contact-number" class="form-label">Contact Number:</label>
+                <input type="tel" id="contact-number" name="contact-number" class="form-control" required>
             </div>
             
             <div class="mb-3">

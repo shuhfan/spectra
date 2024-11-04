@@ -1,0 +1,145 @@
+<div class="page-wrapper">
+
+    <%- include('../partials/userHeader') %>
+
+    <section class="page-title" style="background-image: url(images/background/page-title.jpg);">
+        <div class="auto-container">
+            <div class="title-outer text-center">
+                <h1 class="title">Careers Details</h1>
+                <ul class="page-breadcrumb">
+                    <li><a href="/">Home</a></li>
+                    <li>Careers Details</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f0f2f5; /* Soft background color */
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .page-title {
+            padding: 60px 0;
+            color: white;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto; /* Space around the container */
+            padding: 20px; /* Padding inside the container */
+            background: white; /* White background for the content */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 2.5em; /* Increase size */
+            color: #24a735; /* Primary color for heading */
+            margin-bottom: 30px;
+        }
+
+        h4 {
+            font-size: 2em; /* Emphasized job title */
+            margin-bottom: 15px;
+            color: #343a40; /* Darker text color */
+        }
+
+        h5 {
+            margin-top: 20px;
+            font-size: 1.6em; /* Slightly larger size for subheadings */
+            color: #495057; /* Neutral color for subheadings */
+        }
+
+        p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-top: 25px;
+        }
+
+        
+
+        /* Styling for the file input */
+        .form-control-file {
+            display: block;
+            padding: 10px; /* Add padding to the file input */
+            border: 1px solid #ced4da; /* Normal border */
+            border-radius: 5px; /* Rounded borders */
+            transition: border-color 0.3s;
+        }
+
+        .form-control-file:focus {
+            border-color: #007bff; /* Change border color on focus */
+            outline: none; /* Remove outline */
+        }
+    </style>
+
+    <div class="container">
+        <h2>Job Details</h2>
+
+        <div id="job-details" class="job-details">
+            <h4><%= job.job_title %></h4>
+            <p><strong>Company:</strong> <%= job.company_name %></p>
+            <p><strong>Location:</strong> <%= job.location %></p>
+            <p><strong>Salary Range:</strong> $<%= job.salary_range %></p>
+            
+            <h5>Description:</h5>
+            <p><%= job.job_description %></p>
+            
+            <h5>Requirements:</h5>
+            <p><%= job.requirements %></p>
+
+            <!-- CV Upload Section -->
+            <form id="cvUploadForm" enctype="multipart/form-data" class="mt-4">
+                <div class="form-group mb-3">
+                    <label for="cvFile">Upload your CV:</label>
+                    <input type="file" class="form-control-file" id="cvFile" name="cvFile" required accept=".pdf,.doc,.docx">
+                </div>
+                <button type="button" class="btn btn-success" onclick="submitCV()">Submit Application</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Include jQuery and Bootstrap JS -->
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+
+    <!-- JavaScript for CV submission -->
+    <script>
+        function submitCV() {
+            const cvFileInput = document.getElementById('cvFile');
+
+            if (cvFileInput.files.length === 0) {
+                alert('Please upload your CV before submitting.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('cvFile', cvFileInput.files[0]);
+
+            fetch('/submit-cv', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message); // Show success message
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('There was an error submitting your CV.');
+                });
+        }
+    </script>
+
+    <%- include('../partials/userFooter') %>
+
+</div>

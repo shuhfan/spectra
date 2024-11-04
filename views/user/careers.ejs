@@ -1,0 +1,78 @@
+<div class="page-wrapper">
+
+    <%- include('../partials/userHeader') %>
+
+    <section class="page-title" style="background-image: url(images/background/page-title.jpg);">
+        <div class="auto-container">
+            <div class="title-outer text-center">
+                <h1 class="title">Careers</h1>
+                <ul class="page-breadcrumb">
+                    <li><a href="/">Home</a></li>
+                    <li>Careers</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        .table-container {
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .job-table th {
+            background-color: rgb(60, 167, 50); /* Bootstrap primary color */
+            color: white;
+        }
+        .job-table td {
+            vertical-align: middle; /* Center content vertically */
+        }
+    </style>
+
+    <div class="container mt-5" style="min-height: 50vh;">
+
+
+        <div class="table-container">
+            <table class="table job-table">
+                <thead>
+                    <tr>
+                        <th>Job Title</th>
+                        <th>Company</th>
+                        <th>Location</th>
+                        <th>Salary Range</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% jobs.forEach(job => { %>
+                        <tr>
+                            <td><%= job.job_title %></td>
+                            <td><%= job.company_name %></td>
+                            <td><%= job.location %></td>
+                            <td>$<%= job.salary_range %></td>
+                            <!-- Link to Job Details Page -->
+                            <td><a href="/career-details/<%= job.id %>" class="btn btn-primary">View Details</a></td>
+                        </tr>
+                    <% }) %>
+
+                    <% if (jobs.length === 0) { %>
+                        <tr>
+                            <td colspan="5" class="text-center alert ">
+                                No Job Vacancies Available - Please check back later.
+                            </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- Include jQuery and Bootstrap JS -->
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+
+<%- include('../partials/userFooter') %>
+
+</div>

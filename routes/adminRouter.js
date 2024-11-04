@@ -26,6 +26,7 @@ adminRouter.get('/user-management',adminController.loadUserManagement)
 adminRouter.get('/add-services',adminController.loadAddServices)
 adminRouter.get('/all-services',adminController.loadAllServices)
 adminRouter.get('/delete-services/:id',adminController.deleteServices)
+adminRouter.get('/edit-services/:id',adminController.loadEditServices)
 adminRouter.get('/add-images',adminController.loadAddImages)
 adminRouter.get('/all-images',adminController.loadAllImages)
 adminRouter.get('/delete-images/:id',adminController.deleteImage)
@@ -35,6 +36,7 @@ adminRouter.get('/delete-careers/:id',adminController.deleteCareers)
 
 
 adminRouter.post('/add-services',upload.single('image'),adminController.addService)
+adminRouter.post('/edit-services/:id',upload.single('image'),adminController.editServices)
 adminRouter.post('/add-images',upload.single('image'),adminController.addImage)
 adminRouter.post('/add-careers',adminController.addCareers)
 

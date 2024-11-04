@@ -18,7 +18,39 @@
         </div>
         
 </div>
+<style>
+    .gallery-img {
+    height: 150px;          /* Fixed height for images */
+    width: 100%;            /* Full width to cover the card */
+    object-fit: contain;      /* Ensures the image fills the area, cropping excess */
+    border-radius: 5px 5px 0 0; /* Rounded corners on the top */
+}
 
+.card {
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow */
+    border: none;           /* Remove default border */
+    border-radius: 5px;     /* Rounded corners for the card */
+}
+
+.card-body {
+    background-color: #f8f9fa; /* Light background color for the body */
+    text-align: center;
+}
+
+.card-title {
+    font-size: 1rem;
+    color: #333;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+/* Center the delete button */
+.btn-danger {
+    display: block;
+    margin: 0 auto;
+}
+
+</style>
 
 <section class="main-content">
 
