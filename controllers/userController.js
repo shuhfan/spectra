@@ -1,5 +1,14 @@
 const db = require('../config/db')
 const bcrypt = require('bcrypt')
+const nodemailer = require('nodemailer')
+const env = require('dotenv').config();
+const transporter = nodemailer.createTransport({
+  service: 'Gmail', 
+  auth: {
+      user: process.env.EMAIL, 
+      pass: process.env.EMAIL_PASS
+  }
+});
 
 const loadHome = (req, res, next) => {
   res.render('home')
@@ -11,6 +20,31 @@ const loadAboutUs = (req, res, next) => {
 
 const loadContactUs = (req, res, next) => {
   res.render('contact-us')
+}
+
+const contact = async (req, res) => {
+  const { form_name, form_phone, form_message } = req.body;
+
+  const mailOptions = {
+      from: process.env.EMAIL,
+      to:  process.env.EMAIL,
+      subject: 'New Contact Form Submission',
+      html: `
+        <h2>New Contact Form Submission</h2>
+        <p><strong>Name:</strong> ${form_name}</p>
+        <p><strong>Phone:</strong> ${form_phone}</p>
+        <p><strong>Message:</strong></p>
+        <p>${form_message}</p>
+    `
+  };
+
+  try {
+      await transporter.sendMail(mailOptions);
+      res.status(200).json({ message: 'Contact Form Sent Successfully!' });
+  } catch (error) {
+      console.error('Error sending email:', error);
+      res.status(500).json({ message: 'Error sending email.' });
+  }
 }
 
 const loadgallery = async (req, res) => {
@@ -76,8 +110,37 @@ const loadCareerDetails = async (req, res) => {
   }
 }
 
-const loadWarrentyResgistration = (req,res)=>{
+const loadWarrantyResgistration = (req,res)=>{
   res.render('warrenty')
+}
+
+const warrantyRegister = async (req, res) => {
+  const { form_name, form_phone, form_email, invoice_no, invoice_date, company_name, company_address } = req.body;
+
+  const mailOptions = {
+      from: process.env.EMAIL,
+      to: process.env.EMAIL, 
+      subject: 'New Warranty Registration',
+      html: `
+          <h2>New Warranty Registration</h2>
+          <p><strong>Name:</strong> ${form_name}</p>
+          <p><strong>Phone:</strong> ${form_phone}</p>
+          <p><strong>Email:</strong> ${form_email}</p>
+          <p><strong>Invoice No:</strong> ${invoice_no}</p>
+          <p><strong>Invoice Date:</strong> ${invoice_date}</p>
+          <p><strong>Company Name:</strong> ${company_name}</p>
+          <p><strong>Company Address:</strong></p>
+          <p>${company_address}</p>
+      `
+  };
+
+  try {
+      await transporter.sendMail(mailOptions);
+      res.status(200).json({ message: 'Warranty registration submitted successfully!' });
+  } catch (error) {
+      console.error('Error sending email:', error);
+      res.status(500).json({ message: 'Error sending email.' });
+  }
 }
 
 const loadLogin = (req, res) => {
@@ -183,12 +246,14 @@ module.exports = {
   loadHome,
   loadAboutUs,
   loadContactUs,
+  contact,
   loadgallery,
   loadServices,
   loadServicesDetails,
   loadCareers,
   loadCareerDetails,
-  loadWarrentyResgistration,
+  loadWarrantyResgistration,
+  warrantyRegister,
   loadLogin,
   loadSignup,
   signUp,

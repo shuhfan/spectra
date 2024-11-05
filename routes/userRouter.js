@@ -9,6 +9,7 @@ const config = require('../config/session')
 const expressLayouts = require('express-ejs-layouts')
 
 
+
 userRouter.use(session({
     secret : config.userSession,
     resave: false,
@@ -61,11 +62,13 @@ userRouter.get('/services',userController.loadServices)
 userRouter.get('/services/:id',userController.loadServicesDetails)
 userRouter.get('/careers',userController.loadCareers)
 userRouter.get('/career-details/:id',userController.loadCareerDetails)
-userRouter.get('/warrenty-registration',userController.loadWarrentyResgistration)
+userRouter.get('/warrenty-registration',userController.loadWarrantyResgistration)
 
 
 
 userRouter.post('/signup',userController.signUp)
 userRouter.post('/login',userController.login)
+userRouter.post('/contact-us',userController.contact)
+userRouter.post('/register-warranty',userController.warrantyRegister)
 
 module.exports = userRouter;

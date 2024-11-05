@@ -7,10 +7,10 @@
     <section class="page-title" style="background-image: url(images/background/page-title.jpg);">
         <div class="auto-container">
             <div class="title-outer text-center">
-                <h1 class="title">Warrenty/AMC Registration</h1>
+                <h1 class="title">Warranty/AMC Registration</h1>
                 <ul class="page-breadcrumb">
                     <li><a href="/">Home</a></li>
-                    <li>Warrenty/AMC Registration</li>
+                    <li>Warranty/AMC Registration</li>
                 </ul>
             </div>
         </div>
@@ -52,39 +52,39 @@
                 <form id="warrantyForm">
                     <div class="form-group">
                         <label for="warrantyName">Name</label>
-                        <input type="text" class="form-control" id="warrantyName" required>
+                        <input type="text" class="form-control" id="warrantyName" name="form_name" required>
                     </div>
-    
+
                     <div class="form-group">
                         <label for="warrantyContact">Contact</label>
-                        <input type="tel" class="form-control" id="warrantyContact" required>
+                        <input type="tel" class="form-control" id="warrantyContact" name="form_phone" required>
                     </div>
-    
+
                     <div class="form-group">
                         <label for="warrantyEmail">Email</label>
-                        <input type="email" class="form-control" id="warrantyEmail" required>
+                        <input type="email" class="form-control" id="warrantyEmail" name="form_email" required>
                     </div>
-    
+
                     <div class="form-group">
                         <label for="invoiceNo">Invoice No.</label>
-                        <input type="text" class="form-control" id="invoiceNo">
+                        <input type="text" class="form-control" id="invoiceNo" name="invoice_no">
                     </div>
-    
+
                     <div class="form-group">
                         <label for="invoiceDate">Invoice Date</label>
-                        <input type="date" class="form-control" id="invoiceDate">
+                        <input type="date" class="form-control" id="invoiceDate" name="invoice_date">
                     </div>
-    
+
                     <div class="form-group">
                         <label for="companyNameWarranty">Company Name</label>
-                        <input type="text" class="form-control" id="companyNameWarranty" required>
+                        <input type="text" class="form-control" id="companyNameWarranty" name="company_name" required>
                     </div>
-    
+
                     <div class="form-group">
                         <label for="companyAddressWarranty">Company Address with Pincode</label>
-                        <textarea class="form-control" id="companyAddressWarranty" rows="3" required></textarea>
+                        <textarea class="form-control" id="companyAddressWarranty" name="company_address" rows="3" required></textarea>
                     </div>
-    
+
                     <button type="submit" class="btn btn-success btn-block">Submit Warranty Registration</button>
                 </form>
             </div>
@@ -124,7 +124,7 @@
                     </div >
     
                     <!-- Submit Button -->
-                    <button type= "submit"class= "btn btn-success btn-block">Submit AMC Registration</button >
+                    <button type="submit"class= "btn btn-success btn-block">Pay Now</button>
                 </form >
             </div >
         </div >
@@ -141,7 +141,40 @@
             });
         });
     </script>
+<script>
+    $(document).ready(function() {
+        $('#warrantyForm').on('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
 
+            const formData = $(this).serialize(); // Serialize form data
+
+            $.ajax({
+                url: '/register-warranty', // Your backend endpoint
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: response.message,
+                        icon: 'success',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                    $('#warrantyForm')[0].reset(); // Reset the form after successful submission
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: xhr.responseJSON.message || 'There was an error sending your message.',
+                        icon: 'error',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+    });
+</script>
     <%-include('../partials/userFooter')%>
 
 </div>

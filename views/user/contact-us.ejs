@@ -1,117 +1,138 @@
+<div class="page-wrapper">
 
-    <div class="page-wrapper">
+    <%- include('../partials/userHeader') %>
 
-        <%-include('../partials/userHeader')%>
-
-
-        <section class="page-title" style="background-image: url(images/background/page-title.jpg);">
-            <div class="auto-container">
-                <div class="title-outer text-center">
-                    <h1 class="title">Contact Us</h1>
-                    <ul class="page-breadcrumb">
-                        <li><a href="/">Home</a></li>
-                        <li>Contact Us</li>
-                    </ul>
-                </div>
+    <section class="page-title" style="background-image: url(images/background/page-title.jpg);">
+        <div class="auto-container">
+            <div class="title-outer text-center">
+                <h1 class="title">Contact Us</h1>
+                <ul class="page-breadcrumb">
+                    <li><a href="/">Home</a></li>
+                    <li>Contact Us</li>
+                </ul>
             </div>
-        </section>
+        </div>
+    </section>
 
+    <section class="contact-details">
+        <div class="container pb-70">
+            <div class="row">
+                <div class="col-xl-7 col-lg-6">
+                    <div class="sec-title">
+                        <span class="sub-title">Send us an email</span>
+                        <h2>Feel free to reach out</h2>
+                    </div>
 
-        <section class="contact-details">
-            <div class="container pb-70">
-                <div class="row">
-                    <div class="col-xl-7 col-lg-6">
+                    <!-- Contact Form -->
+                    <form id="contact_form" name="contact_form" method="post">
+                        <div class="row">
+                            <div class="col-sm-6 mb-3">
+                                <input name="form_name" class="form-control" type="text" placeholder="Enter Name" required>
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <input name="form_phone" class="form-control" type="text" placeholder="Enter Phone" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <textarea name="form_message" class="form-control required" rows="7" placeholder="Enter Message" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+
+                </div>
+                <div class="col-xl-5 col-lg-6">
+                    <div class="contact-details__right">
                         <div class="sec-title">
-                            <span class="sub-title">Send us an email</span>
-                            <h2>Feel free to reach out</h2>
+                            <span class="sub-title">Need any help?</span>
+                            <h2>Get in touch with us</h2>
+                            <div class="text">We are always here to help with any inquiries. Reach out to discuss your project needs.</div>
                         </div>
-        
-                        <form id="contact_form" name="contact_form" action="https://yourwebsite.com/sendmail.php" method="post">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="mb-3">
-                                        <input name="form_name" class="form-control" type="text" placeholder="Enter Name">
-                                    </div>
+                        <ul class="list-unstyled contact-details__info">
+                            <li>
+                                <div class="icon">
+                                    <span class="lnr-icon-phone-plus"></span>
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="mb-3">
-                                        <input name="form_email" class="form-control required email" type="email" placeholder="Enter Email">
-                                    </div>
+                                <div class="text">
+                                    <h6 class="mb-1">Have any questions?</h6>
+                                    <a href="tel:+919188330335"><span>Free</span> +91 9188330335</a>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="mb-3">
-                                        <input name="form_subject" class="form-control required" type="text" placeholder="Enter Subject">
-                                    </div>
+                            </li>
+                            <li>
+                                <div class="icon">
+                                    <span class="lnr-icon-envelope1"></span>
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="mb-3">
-                                        <input name="form_phone" class="form-control" type="text" placeholder="Enter Phone">
-                                    </div>
+                                <div class="text">
+                                    <h6 class="mb-1">Write to us</h6>
+                                    <a href="mailto:info@specterra.in">info@specterra.in</a>
                                 </div>
-                            </div>
-                            <div class="mb-3">
-                                <textarea name="form_message" class="form-control required" rows="7" placeholder="Enter Message"></textarea>
-                            </div>
-                            <div class="mb-5" style="display: flex;">
-                                <input name="form_botcheck" class="form-control" type="hidden" value />
-                                <button type="submit" class="theme-btn btn-style-one" data-loading-text="Please wait...">
-                                    <span class="btn-title">Send Message</span>
-                                </button>
-                                <button type="reset" class="theme-btn btn-style-one ml-25"><span class="btn-title">Reset</span></button>
-                            </div>
-                        </form>
-        
-                    </div>
-                    <div class="col-xl-5 col-lg-6">
-                        <div class="contact-details__right">
-                            <div class="sec-title">
-                                <span class="sub-title">Need any help?</span>
-                                <h2>Get in touch with us</h2>
-                                <div class="text">We are always here to help with any geotechnical, environmental, or water treatment inquiries. Reach out to discuss your project needs.</div>
-                            </div>
-                            <ul class="list-unstyled contact-details__info">
-                                <li>
-                                    <div class="icon">
-                                        <span class="lnr-icon-phone-plus"></span>
-                                    </div>
-                                    <div class="text">
-                                        <h6 class="mb-1">Have any questions?</h6>
-                                        <a href="tel:+919188330335"><span>Free</span> +91 9188330335</a>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="icon">
-                                        <span class="lnr-icon-envelope1"></span>
-                                    </div>
-                                    <div class="text">
-                                        <h6 class="mb-1">Write to us</h6>
-                                        <a href="mailto:info@specterra.in">info@specterra.in</a>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="icon" >
-                                        <span class="lnr-icon-location"></span>
-                                    </div>
-                                    <div class="text">
-                                        <h6 class="mb-1">Visit us</h6>
-                                        <span>18/372J, Ramankeriyil Building, Chengalam South, Kottayam, Kerala, 686022</span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                            </li>
+                            <li>
+                                <div class="icon">
+                                    <span class="lnr-icon-location"></span>
+                                </div>
+                                <div class="text">
+                                    <h6 class="mb-1">Visit us</h6>
+                                    <span>18/372J, Ramankeriyil Building, Chengalam South, Kottayam, Kerala, 686022</span>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </section>
-        
-        <section class="map-section py-0">
-            <iframe class="map w-100" src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=18/372J,%20Ramankeriyil%20Building,%20Kottayam,%20Kerala,%20India&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
-        </section>
-        
+        </div>
+    </section>
 
+    <!-- Google Map Section -->
+    <section class="map-section py-0">
+        <!-- Replace with your actual map embed -->
+        <iframe 
+            src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=18/372J,%20Ramankeriyil%20Building,%20Kottayam,%20Kerala,%20India&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+            width="100%" height="600" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+    </section>
 
-        <%-include('../partials/userFooter')%>
+    <!-- Footer -->
+    <%- include('../partials/userFooter') %>
 
-    </div>
+</div>
+
+<!-- Include jQuery and SweetAlert2 -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+<script>
+// jQuery for handling form submission
+$(document).ready(function() {
+    $('#contact_form').on('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const formData = $(this).serialize(); // Serialize form data
+
+        $.ajax({
+            url: '/contact-us', // Your backend endpoint
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: response.message,
+                    icon: 'success',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+                $('#contact_form')[0].reset(); // Reset the form after successful submission
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: xhr.responseJSON.message || 'There was an error sending your message.',
+                    icon: 'error',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            }
+        });
+    });
+});
+</script>
