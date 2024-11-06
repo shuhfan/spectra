@@ -101,7 +101,7 @@
             <form id="cvUploadForm" enctype="multipart/form-data" class="mt-4">
                 <div class="form-group mb-3">
                     <label for="cvFile">Upload your CV:</label>
-                    <input type="file" class="form-control-file" id="cvFile" name="cvFile" required accept=".pdf,.doc,.docx">
+                    <input type="file" class="form-control-file" id="cvFile" name="cvFile" required accept=".png,.pdf,.doc,.docx">
                 </div>
                 <button type="button" class="btn btn-success" onclick="submitCV()">Submit Application</button>
             </form>
@@ -131,11 +131,11 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    alert(data.message); // Show success message
+                    Swal.fire('Success', data.message, 'success');
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('There was an error submitting your CV.');
+                    Swal.fire('Error', 'There was an error submitting your CV.', 'error');
                 });
         }
     </script>

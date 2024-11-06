@@ -3,6 +3,7 @@ var userRouter = express();
 const auth = require('../middileware/userAuth')
 const userController = require('../controllers/userController')
 const session = require('express-session')
+const upload = require('../multer/multer')
 const passport = require('passport');
 require('../config/passport-setup');
 const config = require('../config/session')
@@ -70,5 +71,6 @@ userRouter.post('/signup',userController.signUp)
 userRouter.post('/login',userController.login)
 userRouter.post('/contact-us',userController.contact)
 userRouter.post('/register-warranty',userController.warrantyRegister)
+userRouter.post('/submit-cv',upload.single('cvFile'),userController.uploadCV)
 
 module.exports = userRouter;

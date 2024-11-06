@@ -2,6 +2,8 @@ const db = require('../config/db')
 const bcrypt = require('bcrypt')
 const nodemailer = require('nodemailer')
 const env = require('dotenv').config();
+const path = require('path');
+const fs = require('fs');
 const transporter = nodemailer.createTransport({
   service: 'Gmail', 
   auth: {
@@ -92,6 +94,34 @@ const loadCareers = async (req, res) => {
     console.error(error.message);
     res.status(500).send('Server Error');
   }
+}
+
+const uploadCV = (req,res)=>{
+  const file = req.file ? req.file.filename : null
+  const file_path = path.join(__dirname,'..','public','uploads',file)
+
+  const mailOptions = {
+    from: process.env.EMAIL,
+    to: process.env.EMAIL,
+    subject: 'New CV Submission',
+    attachments: [
+      {
+        filename:file,
+        path: file_path
+      }
+    ]
+  }
+  transporter.sendMail(mailOptions,(error,info)=>{
+    if(error){
+      return res.status(500).json({message:'Falied to send email:'+error.message});
+    }
+    fs.unlink(file_path,(err)=>{
+      if(err){
+        console.error('Failed to delete file'+err)
+      }
+    })
+    res.status(200).json({ message: 'Your CV has been uploaded successfully.' });
+  })
 }
 
 const loadCareerDetails = async (req, res) => {
@@ -251,6 +281,7 @@ module.exports = {
   loadServices,
   loadServicesDetails,
   loadCareers,
+  uploadCV,
   loadCareerDetails,
   loadWarrantyResgistration,
   warrantyRegister,
