@@ -1,0 +1,169 @@
+<div class="page-wrapper">
+
+    <%-include('../partials/userHeader')%>
+
+
+
+
+
+        <style>
+            .hero-section {
+
+                background-position: center;
+                /* Center the image */
+                height: 165px;
+                /* Fixed height for the hero section */
+                display: flex;
+                /* Flexbox for centering content */
+                align-items: end;
+                /* Center vertically */
+                justify-content: center;
+                /* Center horizontally */
+                color: white;
+                /* Text color */
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+                /* Text shadow for readability */
+            }
+
+            /* Service Details Container */
+            .service-details {
+                margin-top: 20px;
+                /* Space above the details section */
+                padding: 20px;
+                /* Padding inside the details section */
+                background-color: white;
+                /* White background for contrast */
+                border-radius: 8px;
+                /* Rounded corners */
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                /* Subtle shadow for depth */
+            }
+
+            /* Headings Styling */
+            h1 {
+                font-size: 2.5rem;
+                /* Font size for main title in hero section */
+            }
+
+            h2 {
+                font-size: 2rem;
+                /* Font size for subheadings in details section */
+                margin-bottom: 20px;
+                /* Space below subheading */
+            }
+
+            /* Image Styling */
+            .img-fluid {
+                max-width: 100%;
+                /* Ensure image is responsive */
+                height: auto;
+                /* Maintain aspect ratio */
+                border-radius: 8px;
+                /* Rounded corners for images */
+
+            }
+
+            /* Paragraph Styling */
+            p {
+                font-size: 1rem;
+                /* Base font size for paragraphs */
+                line-height: 1.6;
+                /* Line height for readability */
+            }
+
+            /* Button Styling */
+            .btn-success {
+                background-color: #28a745;
+                /* Green background color for success buttons */
+                color: white;
+                /* White text color */
+                border-radius: 4px;
+                /* Rounded corners for buttons */
+                padding: 12px;
+                /* Padding inside buttons */
+                font-size: 1.1rem;
+                /* Slightly larger font size for buttons */
+            }
+
+            .btn-success:hover {
+                background-color: #218838;
+                /* Darker green on hover for feedback */
+            }
+
+            .btn-success.btn-block {
+                width: 100%;
+                /* Full width button style */
+            }
+
+            /* Alert Styling (Optional) */
+            .alert {
+                padding: 15px;
+                margin-top: 20px;
+                border-radius: 4px;
+            }
+
+            .alert-warning {
+                background-color: #fff3cd;
+                color: #856404;
+            }
+
+            /* Responsive Design Adjustments (Optional) */
+            @media (max-width: 768px) {
+                .hero-section {
+                    height: 200px;
+                    /* Reduce height on smaller screens */
+                    font-size: 1.5rem;
+                    /* Adjust font size in hero section on smaller screens */
+                }
+
+                h1 {
+                    font-size: 2rem;
+                    /* Adjust heading size on smaller screens */
+                }
+
+                h2 {
+                    font-size: 1.5rem;
+                    /* Adjust subheading size on smaller screens */
+                }
+            }
+        </style>
+        </head>
+
+        <body>
+
+
+
+            <div class="hero-section">
+                <h1 class="text-center">
+                    <%= service.title %>
+                </h1>
+            </div>
+
+            <div class="container service-details mt-4">
+
+                <img src="/uploads/<%= service.image %>" alt="<%= service.title %>" class="img-fluid mb-4">
+
+                <p><strong>Description:</strong> <%= service.description %></p>
+
+                    <strong>Amount:</strong> $<%= service.amount %>
+                </p>
+
+                <!-- Optional Additional Information -->
+                <% if (service.additional_info) { %>
+                    <p><strong>Additional Information:</strong>
+                        <%= service.additional_info %>
+                    </p>
+                    <% } %>
+
+                        <!-- Booking Button -->
+                        <div class="text-center">
+                            <button class="btn btn-success btn-block" onclick="bookService('<%= service.id %>')">Book
+                                Now</button>
+                        </div>
+
+            </div>
+
+
+            <%-include('../partials/userFooter')%>
+
+</div>

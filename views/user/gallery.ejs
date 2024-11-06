@@ -1,0 +1,110 @@
+
+<div class="page-wrapper">
+
+    <%-include('../partials/userHeader')%>
+
+
+    <section class="page-title" style="background-image: url(images/background/page-title.jpg);">
+        <div class="auto-container">
+            <div class="title-outer text-center">
+                <h1 class="title">Gallery</h1>
+                <ul class="page-breadcrumb">
+                    <li><a href="/">Home</a></li>
+                    <li>Gallery</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    
+<style>
+
+    .gallery-container {
+        margin-top: 2vh;
+        
+    }
+   .gallery-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    height: 250px; /* Set fixed height for uniformity */
+}
+
+.gallery-card:hover {
+    transform: scale(1.05);
+}
+
+/* Style for the image with fixed size and cropping */
+.gallery-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Crop the image to fit without distortion */
+    border-radius: 10px;
+}
+
+/* Overlay Styling */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7); /* Darker background for better contrast */
+    color: #fff;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    border-radius: 10px;
+    padding-bottom: 20px;
+}
+
+/* Show overlay on hover */
+.gallery-card:hover .overlay {
+    opacity: 1;
+    
+}
+
+/* Overlay text styling with shadow */
+.overlay-text {
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 0 10px;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8); 
+    color: #fff;
+}
+
+</style>
+
+        <% if (images.length === 0) { %>
+            <div class="col-12" style="min-height: 50vh;padding-top: 25vh;">
+                <div class="alert  text-center">
+                    <strong>No Images Available</strong> - Please check back later.
+                </div>
+            </div>
+        <% } else { %>
+            <div class="container gallery-container">
+                <div class="row">
+            <% images.forEach(image => { %>
+            <!-- Gallery Item -->
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card gallery-card">
+                    <!-- Image -->
+                    <img src="/uploads/<%= image.image_path %>" class="card-img-top gallery-img" alt="<%= image.title %>">
+                    
+                    <!-- Overlay with Title -->
+                    <div class="overlay">
+                        <h3 class="overlay-text"><%= image.title %></h3>
+                    </div>
+                </div>
+            </div>
+            <% }) %>
+        <% } %>
+    </div>
+</div>
+
+    <%-include('../partials/userFooter')%>
+
+</div>

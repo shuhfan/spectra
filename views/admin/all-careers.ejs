@@ -1,0 +1,108 @@
+
+
+<%-include('../partials/adminTopBar')%>
+		
+<%-include('../partials/adminNav')%>
+
+    
+<!-- ============================================================== -->
+<!-- 						Content Start	 						-->
+<!-- ============================================================== -->
+<div class="row page-header">
+        <div class="col-lg-6 align-self-center ">
+          <h2>All Careers</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active">All Careers</li>
+            </ol>
+        </div>
+        
+</div>
+
+
+<section class="main-content">
+
+	<style>
+        /* General styling for career card */
+.card {
+    border: none;
+    border-radius: 8px;                       /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: transform 0.2s ease-in-out;   /* Smooth hover effect */
+}
+
+.card:hover {
+    transform: translateY(-5px);              /* Lift effect on hover */
+}
+
+.card-body {
+    padding: 20px;                            /* Padding inside the card */
+    background-color: #f8f9fa;                /* Light background color */
+}
+
+.card-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.card-body p {
+    margin: 5px 0;                            /* Spacing between information lines */
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.card-body p strong {
+    color: #444;
+}
+
+.btn-danger {
+    font-size: 0.9rem;
+    width: 100%;                              /* Full-width delete button */
+    background-color: #dc3545;
+    border: none;
+    margin-top: 15px;
+    transition: background-color 0.2s;
+}
+
+.btn-danger:hover {
+    background-color: #b52a3a;                /* Darker shade on hover */
+}
+
+    </style>
+    
+
+    <div class="container">
+        
+        <div class="row">
+            <% careers.forEach(career => { %>
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= career.job_title %></h5>
+                        <p><strong>Company:</strong> <%= career.company_name %></p>
+                        <p><strong>Location:</strong> <%= career.location %></p>
+                        <p><strong>Type:</strong> <%= career.employment_type %></p>
+                        <p><strong>Deadline:</strong> <%= career.application_deadline %></p>
+                        <a href="/admin/delete-careers/<%= career.id %>" class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+    
+	
+		
+		
+	<footer class="footer">
+		<span>Copyright &copy;  2024 Specterra Geotech Private Limited. All rights reserved.</span>
+	</footer>
+
+</section>
+<!-- ============================================================== -->
+<!-- 						Content End		 						-->
+<!-- ============================================================== -->
+
+

@@ -1,0 +1,86 @@
+
+
+<%-include('../partials/adminTopBar')%>
+		
+<%-include('../partials/adminNav')%>
+
+    
+<!-- ============================================================== -->
+<!-- 						Content Start	 						-->
+<!-- ============================================================== -->
+<div class="row page-header">
+        <div class="col-lg-6 align-self-center ">
+          <h2>All Images</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active">All Images</li>
+            </ol>
+        </div>
+        
+</div>
+<style>
+    .gallery-img {
+    height: 150px;          /* Fixed height for images */
+    width: 100%;            /* Full width to cover the card */
+    object-fit: contain;      /* Ensures the image fills the area, cropping excess */
+    border-radius: 5px 5px 0 0; /* Rounded corners on the top */
+}
+
+.card {
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow */
+    border: none;           /* Remove default border */
+    border-radius: 5px;     /* Rounded corners for the card */
+}
+
+.card-body {
+    background-color: #f8f9fa; /* Light background color for the body */
+    text-align: center;
+}
+
+.card-title {
+    font-size: 1rem;
+    color: #333;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+/* Center the delete button */
+.btn-danger {
+    display: block;
+    margin: 0 auto;
+}
+
+</style>
+
+<section class="main-content">
+
+	
+    <div class="container mt-5">
+        
+        <div class="row">
+            <% images.forEach(image => { %>
+            <div class="col-md-3 col-sm-6">
+                <div class="card mb-4">
+                    <img src="/uploads/<%= image.image_path %>" class="card-img-top gallery-img" alt="<%= image.title %>">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= image.title %></h5>
+                        <a href="/admin/delete-images/<%= image.id %>"  class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+	
+		
+		
+	<footer class="footer">
+		<span>Copyright &copy;  2024 Specterra Geotech Private Limited. All rights reserved.</span>
+	</footer>
+
+</section>
+<!-- ============================================================== -->
+<!-- 						Content End		 						-->
+<!-- ============================================================== -->
+
+

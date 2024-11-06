@@ -1,0 +1,88 @@
+
+
+<%-include('../partials/adminTopBar')%>
+		
+<%-include('../partials/adminNav')%>
+
+	
+<!-- ============================================================== -->
+<!-- 						Content Start	 						-->
+<!-- ============================================================== -->
+<div class="row page-header">
+		<div class="col-lg-6 align-self-center ">
+		  <h2>Dashboard</h2>
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="#">Home</a></li>
+				<li class="breadcrumb-item active">Dashboard</li>
+			</ol>
+		</div>
+		
+</div>
+
+<section class="main-content">
+	<div class="row w-no-padding margin-b-30">
+	
+		<div class="col-md-3">
+			<div class="widget  bg-light">
+				<div class="row row-table ">
+					<div class="margin-b-30">
+						<h2 class="margin-b-5">Users</h2>
+						<p class="text-muted">Total Users</p>
+						<span class="float-right text-primary widget-r-m"><%= counts.totalUsers %></span>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-md-3">
+			<div class="widget  bg-light">
+				<div class="row row-table ">
+					<div class="margin-b-30">
+						<h2 class="margin-b-5">Services</h2>
+						<p class="text-muted">Total Services</p>
+						<span class="float-right text-indigo widget-r-m"><%= counts.totalServices %></span>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-md-3">
+			<div class="widget  bg-light">
+				<div class="row row-table ">
+					<div class="margin-b-30">
+						<h2 class="margin-b-5">Careers</h2>
+						<p class="text-muted">Total Careers</p>
+						<span class="float-right text-success widget-r-m"><%= counts.totalCareers %></span>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-md-3">
+			<div class="widget  bg-light">
+				<div class="row row-table ">
+					<div class="margin-b-30">
+						<h2 class="margin-b-5">Gallery</h2>
+						<p class="text-muted">Total Images</p>
+						<span class="float-right text-warning widget-r-m"><%= counts.totalGallery %></span>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+		
+		
+	<footer class="footer">
+		<span>Copyright &copy;  2024 Specterra Geotech Private Limited. All rights reserved.</span>
+	</footer>
+
+</section>
+<!-- ============================================================== -->
+<!-- 						Content End		 						-->
+<!-- ============================================================== -->
+
+

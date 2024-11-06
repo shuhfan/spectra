@@ -1,0 +1,69 @@
+
+<div class="page-wrapper">
+
+    <%-include('../partials/userHeader')%>
+
+
+    <section class="page-title" style="background-image: url(images/background/page-title.jpg);">
+        <div class="auto-container">
+            <div class="title-outer text-center">
+                <h1 class="title">Services</h1>
+                <ul class="page-breadcrumb">
+                    <li><a href="/">Home</a></li>
+                    <li>Services</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    
+
+    <style>
+        .service-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            min-height: 270px;
+        }
+        .service-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .btn-book {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container mt-5">
+        
+        <div class="row">
+            <% services.forEach(service => { %>
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="service-card">
+                        
+                        <h3><%= service.title %></h3>
+                        <p><%= service.description.substring(0, 100) %>...</p> <!-- Show first 100 characters -->
+                        
+                        <a href="/services/<%= service.id %>" class="btn btn-success btn-book">View Details</a>
+                    </div>
+                </div>
+            <% }) %>
+    
+            <% if (services.length === 0) { %>
+                <div class="col-12">
+                    <div class="alert text-center"style="min-height: 50vh;padding-top: 25vh;">
+                        <strong>No Services Available</strong> - Please check back later.
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+        
+
+    <%-include('../partials/userFooter')%>
+
+</div>

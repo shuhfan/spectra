@@ -1,0 +1,117 @@
+
+
+<%-include('../partials/adminTopBar')%>
+		
+<%-include('../partials/adminNav')%>
+
+    
+<!-- ============================================================== -->
+<!-- 						Content Start	 						-->
+<!-- ============================================================== -->
+<div class="row page-header">
+        <div class="col-lg-6 align-self-center ">
+          <h2>Add Service</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active">Add Service</li>
+            </ol>
+        </div>
+        
+</div>
+<style>
+    /* Container styling */
+form {
+    max-width: 100%;
+    margin: 0;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* General form styling */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.form-control, .form-control-file {
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Textarea styling */
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Submit button styling */
+.btn-block {
+    width: 100%;
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 12px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-block:hover {
+    background-color: #218838;
+}
+
+.btn-block:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.3);
+}
+
+</style>
+
+<section class="main-content">
+
+	
+    <form action="/admin/add-services" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title">Service Title:</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="amount">Amount:</label>
+            <input type="number" class="form-control" id="amount" name="amount" required>
+        </div>
+        <div class="form-group">
+            <label for="image">Upload Image:</label>
+            <input type="file" class="form-control-file" id="image" name="image" accept="image/*" required>
+        </div>
+        <button type="submit" class="btn btn-success btn-block">Add Service</button>
+    </form>
+	
+		
+		
+	<footer class="footer">
+		<span>Copyright &copy;  2024 Specterra Geotech Private Limited. All rights reserved.</span>
+	</footer>
+
+</section>
+<!-- ============================================================== -->
+<!-- 						Content End		 						-->
+<!-- ============================================================== -->
+
+
