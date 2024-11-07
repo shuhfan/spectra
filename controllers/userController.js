@@ -4,6 +4,14 @@ const nodemailer = require('nodemailer')
 const env = require('dotenv').config();
 const path = require('path');
 const fs = require('fs');
+const Razorpay = require('razorpay');
+const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
+
+const razorpayInstance = new Razorpay({
+  key_id: RAZORPAY_ID_KEY,
+  key_secret: RAZORPAY_SECRET_KEY
+});
+
 const transporter = nodemailer.createTransport({
   service: 'Gmail', 
   auth: {
@@ -99,11 +107,13 @@ const loadCareers = async (req, res) => {
 const uploadCV = (req,res)=>{
   const file = req.file ? req.file.filename : null
   const file_path = path.join(__dirname,'..','public','uploads',file)
+  const jobTitle = req.body.jobTitle; const companyName = req.body.companyName; const location = req.body.location; const salaryRange = req.body.salaryRange; const jobDescription = req.body.jobDescription; const requirements = req.body.requirements;
 
   const mailOptions = {
     from: process.env.EMAIL,
     to: process.env.EMAIL,
-    subject: 'New CV Submission',
+    subject: `New CV Submission for ${jobTitle}`,
+    html: ` <h2>New Job Application Received</h2> <p><strong>Job Title:</strong> ${jobTitle}</p> <p><strong>Company:</strong> ${companyName}</p> <p><strong>Location:</strong> ${location}</p> <p><strong>Salary Range:</strong> $${salaryRange}</p> <h3>Description</h3> <p>${jobDescription}</p> <h3>Requirements</h3> <p>${requirements}</p> <p>Please find the CV attached below.</p> `,
     attachments: [
       {
         filename:file,
@@ -172,6 +182,24 @@ const warrantyRegister = async (req, res) => {
       res.status(500).json({ message: 'Error sending email.' });
   }
 }
+
+const verifyPayment = async (req, res) => {
+    const { razorpay_payment_id, amount, name, contact, email, companyName, companyAddress } = req.body;
+
+    try {
+        const payment = await razorpayInstance.payments.fetch(razorpay_payment_id);
+
+        if (payment.status === 'captured') {
+            // Payment successful
+            res.status(200).json({ message: 'Payment verified successfully.' });
+        } else {
+            // Payment failed
+            res.status(400).json({ message: 'Payment verification failed.' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'An error occurred while verifying the payment.' });
+    }
+};
 
 const loadLogin = (req, res) => {
   res.render('login')
@@ -285,6 +313,7 @@ module.exports = {
   loadCareerDetails,
   loadWarrantyResgistration,
   warrantyRegister,
+  verifyPayment,
   loadLogin,
   loadSignup,
   signUp,

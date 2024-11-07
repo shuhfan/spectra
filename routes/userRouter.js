@@ -72,5 +72,6 @@ userRouter.post('/login',userController.login)
 userRouter.post('/contact-us',userController.contact)
 userRouter.post('/register-warranty',userController.warrantyRegister)
 userRouter.post('/submit-cv',upload.single('cvFile'),userController.uploadCV)
+userRouter.post('/verify-payment',userController.verifyPayment)
 
 module.exports = userRouter;

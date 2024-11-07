@@ -2,7 +2,7 @@
 
     <%- include('../partials/userHeader') %>
 
-    <section class="page-title" style="background-image: url(images/background/page-title.jpg);">
+    <section class="page-title" style="background-image: url(/images/background/page-title.jpg);">
         <div class="auto-container">
             <div class="title-outer text-center">
                 <h1 class="title">Careers Details</h1>
@@ -103,6 +103,7 @@
                     <label for="cvFile">Upload your CV:</label>
                     <input type="file" class="form-control-file" id="cvFile" name="cvFile" required accept=".png,.pdf,.doc,.docx">
                 </div>
+                <input type="hidden" id="jobTitle" name="jobTitle" value="<%= job.job_title %>"> <input type="hidden" id="companyName" name="companyName" value="<%= job.company_name %>"> <input type="hidden" id="location" name="location" value="<%= job.location %>"> <input type="hidden" id="salaryRange" name="salaryRange" value="<%= job.salary_range %>"> <input type="hidden" id="jobDescription" name="jobDescription" value="<%= job.job_description %>"> <input type="hidden" id="requirements" name="requirements" value="<%= job.requirements %>">
                 <button type="button" class="btn btn-success" onclick="submitCV()">Submit Application</button>
             </form>
         </div>
@@ -116,29 +117,48 @@
     <script>
         function submitCV() {
             const cvFileInput = document.getElementById('cvFile');
-
+    
             if (cvFileInput.files.length === 0) {
-                alert('Please upload your CV before submitting.');
+                Swal.fire('Error', 'Please upload your CV before submitting.', 'error');
                 return;
             }
-
+    
+            Swal.fire({
+                title: 'Uploading...',
+                text: 'Please wait while your application is being submitted.',
+                icon: 'info',
+                allowOutsideClick: false,
+                showCancelButton: false,
+                showConfirmButton: false,
+                willOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+    
             const formData = new FormData();
             formData.append('cvFile', cvFileInput.files[0]);
-
+            formData.append('jobTitle', document.getElementById('jobTitle').value);
+            formData.append('companyName', document.getElementById('companyName').value);
+            formData.append('location', document.getElementById('location').value);
+            formData.append('salaryRange', document.getElementById('salaryRange').value);
+            formData.append('jobDescription', document.getElementById('jobDescription').value);
+            formData.append('requirements', document.getElementById('requirements').value);
+    
             fetch('/submit-cv', {
                 method: 'POST',
                 body: formData,
             })
-                .then(response => response.json())
-                .then(data => {
-                    Swal.fire('Success', data.message, 'success');
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    Swal.fire('Error', 'There was an error submitting your CV.', 'error');
-                });
+            .then(response => response.json())
+            .then(data => {
+                Swal.fire('Success', data.message, 'success');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire('Error', 'There was an error submitting your CV.', 'error');
+            });
         }
     </script>
+    
 
     <%- include('../partials/userFooter') %>
 

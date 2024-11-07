@@ -85,7 +85,7 @@
                         <textarea class="form-control" id="companyAddressWarranty" name="company_address" rows="3" required></textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-success btn-block">Submit Warranty Registration</button>
+                    <button type="submit" class="btn mt-2 btn-success btn-block">Submit Warranty Registration</button>
                 </form>
             </div>
     
@@ -96,37 +96,37 @@
                         <label for="amcName">Name</label>
                         <input type="text" class="form-control" id="amcName" required>
                     </div>
-    
+            
                     <div class="form-group">
                         <label for="amcContact">Contact</label>
-                        <input type="tel"class= "form-control"id= "amcContact"
-                            required >
+                        <input type="tel" class="form-control" id="amcContact" required>
                     </div>
-    
-                    <div class= "form-group">
-                        <label for= "amcEmail">Email</label >
-                        <input type= "email"class= "form-control"id= "amcEmail"
-                            required >
-                    </div >
-    
-                    <div class= "form-group">
-                        <label for= "amcCompanyName">Company Name</label >
-                        <input type= "text"class= "form-control"id= "amcCompanyName"
-                            required >
-                    </div >
-    
-                    <div class= "form-group">
-                        <label for= "amcCompanyAddress">Company Address with Pincode</label >
-                        <textarea
-                            class= "form-control"id= "amcCompanyAddress"
-                            rows= "3"
-                            required ></textarea >
-                    </div >
-    
+            
+                    <div class="form-group">
+                        <label for="amcEmail">Email</label>
+                        <input type="email" class="form-control" id="amcEmail" required>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="amcCompanyName">Company Name</label>
+                        <input type="text" class="form-control" id="amcCompanyName" required>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="amcCompanyAddress">Company Address with Pincode</label>
+                        <textarea class="form-control" id="amcCompanyAddress" rows="3" required></textarea>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="amcAmount">Amount</label>
+                        <input type="number" class="form-control" id="amcAmount" required>
+                    </div>
+            
                     <!-- Submit Button -->
-                    <button type="submit"class= "btn btn-success btn-block">Pay Now</button>
-                </form >
-            </div >
+                    <button type="button" class="btn mt-2 btn-success btn-block" onclick="payNow()">Pay Now</button>
+                </form>
+            </div>
+            
         </div >
     </div >
     <script src="//code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -144,12 +144,24 @@
 <script>
     $(document).ready(function() {
         $('#warrantyForm').on('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
+            event.preventDefault();
 
-            const formData = $(this).serialize(); // Serialize form data
+            const formData = $(this).serialize();
+
+            Swal.fire({
+                title: 'Submitting...',
+                text: 'Please wait while your warranty is being registered.',
+                icon: 'info',
+                allowOutsideClick: false,
+                showCancelButton: false,
+                showConfirmButton: false,
+                willOpen: () => {
+                    Swal.showLoading();
+                }
+            });
 
             $.ajax({
-                url: '/register-warranty', // Your backend endpoint
+                url: '/register-warranty',
                 type: 'POST',
                 data: formData,
                 success: function(response) {
@@ -157,24 +169,96 @@
                         title: 'Success!',
                         text: response.message,
                         icon: 'success',
-                        timer: 3000,
-                        showConfirmButton: false
+                        showConfirmButton: true
                     });
-                    $('#warrantyForm')[0].reset(); // Reset the form after successful submission
+                    $('#warrantyForm')[0].reset();
                 },
                 error: function(xhr) {
                     Swal.fire({
                         title: 'Error!',
                         text: xhr.responseJSON.message || 'There was an error sending your message.',
                         icon: 'error',
-                        timer: 3000,
-                        showConfirmButton: false
+                        showConfirmButton: true
                     });
                 }
             });
         });
     });
 </script>
+
+<script>
+    function payNow() {
+        const name = document.getElementById('amcName').value;
+        const contact = document.getElementById('amcContact').value;
+        const email = document.getElementById('amcEmail').value;
+        const companyName = document.getElementById('amcCompanyName').value;
+        const companyAddress = document.getElementById('amcCompanyAddress').value;
+        const amount = document.getElementById('amcAmount').value;
+
+        if (!name || !contact || !email || !companyName || !companyAddress || !amount) {
+            alert('Please fill out all fields before proceeding.');
+            return;
+        }
+
+        var options = {
+            "key": "rzp_test_wYINav8ro4ngpH",
+            "amount": amount * 100, // Amount is in currency subunits. Default currency is INR. Hence, amount is in paise
+            "currency": "INR",
+            "name": companyName,
+            "description": "AMC Payment",
+            "image": "https://example.com/your_logo", // Optional
+            "handler": function (response) {
+                $.ajax({
+                    url: '/verify-payment', // Your backend endpoint to verify payment
+                    type: 'POST',
+                    data: {
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        amount: amount,
+                        name: name,
+                        contact: contact,
+                        email: email,
+                        companyName: companyName,
+                        companyAddress: companyAddress
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            alert('Payment has been successfully made.');
+                            $('#amcForm')[0].reset();
+                        } else {
+                            alert('There was an error verifying your payment: ' + response.message);
+                        }
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseJSON.message || 'There was an error verifying your payment.');
+                    }
+                });
+            },
+            "prefill": {
+                "name": name,
+                "email": email,
+                "contact": contact
+            },
+            "notes": {
+                "address": companyAddress
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+
+        var rzp1 = new Razorpay(options);
+
+        rzp1.on('payment.failed', function (response) {
+            alert('Payment failed: ' + response.error.description);
+        });
+
+        rzp1.open();
+    }
+</script>
+
+
+
+
     <%-include('../partials/userFooter')%>
 
 </div>
