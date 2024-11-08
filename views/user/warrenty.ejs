@@ -196,7 +196,11 @@
         const amount = document.getElementById('amcAmount').value;
 
         if (!name || !contact || !email || !companyName || !companyAddress || !amount) {
-            alert('Please fill out all fields before proceeding.');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Missing Information',
+                text: 'Please fill out all fields before proceeding.'
+            });
             return;
         }
 
@@ -206,7 +210,7 @@
             "currency": "INR",
             "name": companyName,
             "description": "AMC Payment",
-            "image": "https://example.com/your_logo", // Optional
+            "image": "/images/logo.png", // Optional
             "handler": function (response) {
                 $.ajax({
                     url: '/verify-payment', // Your backend endpoint to verify payment
@@ -222,14 +226,26 @@
                     },
                     success: function (response) {
                         if (response.success) {
-                            alert('Payment has been successfully made.');
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Payment Success',
+                                text: 'Payment has been successfully made.'
+                            });
                             $('#amcForm')[0].reset();
                         } else {
-                            alert('There was an error verifying your payment: ' + response.message);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Payment Verification Failed',
+                                text: 'There was an error verifying your payment: ' + response.message
+                            });
                         }
                     },
                     error: function (xhr) {
-                        alert(xhr.responseJSON.message || 'There was an error verifying your payment.');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Payment Verification Failed',
+                            text: xhr.responseJSON.message || 'There was an error verifying your payment.'
+                        });
                     }
                 });
             },
@@ -249,12 +265,17 @@
         var rzp1 = new Razorpay(options);
 
         rzp1.on('payment.failed', function (response) {
-            alert('Payment failed: ' + response.error.description);
+            Swal.fire({
+                icon: 'error',
+                title: 'Payment Failed',
+                text: 'Payment failed: ' + response.error.description
+            });
         });
 
         rzp1.open();
     }
 </script>
+
 
 
 

@@ -184,22 +184,38 @@ const warrantyRegister = async (req, res) => {
 }
 
 const verifyPayment = async (req, res) => {
-    const { razorpay_payment_id, amount, name, contact, email, companyName, companyAddress } = req.body;
+  const { razorpay_payment_id, amount, name, contact, email, companyName, companyAddress } = req.body;
 
-    try {
-        const payment = await razorpayInstance.payments.fetch(razorpay_payment_id);
+  try {
+      const payment = await razorpayInstance.payments.fetch(razorpay_payment_id);
+      
+      console.log(payment.status);  // Log the payment details for debugging
 
-        if (payment.status === 'captured') {
-            // Payment successful
-            res.status(200).json({ message: 'Payment verified successfully.' });
-        } else {
-            // Payment failed
-            res.status(400).json({ message: 'Payment verification failed.' });
-        }
-    } catch (error) {
-        res.status(500).json({ message: 'An error occurred while verifying the payment.' });
-    }
+      if (payment.status === 'authorized') {
+          // Capture the payment
+          const captureResponse = await razorpayInstance.payments.capture(razorpay_payment_id, amount * 100);
+          console.log(captureResponse.status);  // Log the capture response for debugging
+
+          if (captureResponse.status === 'captured') {
+              // Payment successfully captured
+              res.status(200).json({ success: true, message: 'Payment verified and captured successfully.' });
+          } else {
+              // Payment capture failed
+              res.status(400).json({ success: false, message: 'Failed to capture payment.' });
+          }
+      } else if (payment.status === 'captured') {
+          // If already captured
+          res.status(200).json({ success: true, message: 'Payment already captured.' });
+      } else {
+          // Payment status is not authorized or captured
+          res.status(400).json({ success: false, message: 'Payment verification failed.' });
+      }
+  } catch (error) {
+      console.error(error);  // Log the error
+      res.status(500).json({ success: false, message: 'An error occurred while verifying the payment.' });
+  }
 };
+
 
 const loadLogin = (req, res) => {
   res.render('login')
