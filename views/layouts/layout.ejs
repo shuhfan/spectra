@@ -47,7 +47,36 @@
     <script src="/js/jquery.form.min.js"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-    
+    <!-- Start of Async Drift Code -->
+<script>
+  "use strict";
+  
+  !function() {
+    var t = window.driftt = window.drift = window.driftt || [];
+    if (!t.init) {
+      if (t.invoked) return void (window.console && console.error && console.error("Drift snippet included twice."));
+      t.invoked = !0, t.methods = [ "identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on" ], 
+      t.factory = function(e) {
+        return function() {
+          var n = Array.prototype.slice.call(arguments);
+          return n.unshift(e), t.push(n), t;
+        };
+      }, t.methods.forEach(function(e) {
+        t[e] = t.factory(e);
+      }), t.load = function(t) {
+        var e = 3e5, n = Math.ceil(new Date() / e) * e, o = document.createElement("script");
+        o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + n + "/" + t + ".js";
+        var i = document.getElementsByTagName("script")[0];
+        i.parentNode.insertBefore(o, i);
+      };
+    }
+  }();
+  drift.SNIPPET_VERSION = '0.3.1';
+  drift.load('aviiir2wupw2');
+  </script>
+  <!-- End of Async Drift Code -->
+
+    <script>!function () { var e, t, n, a; window.MyAliceWebChat || ((t = document.createElement("div")).id = "myAliceWebChat", (n = document.createElement("script")).type = "text/javascript", n.async = !0, n.src = "https://widget.myalice.ai/index.js", (a = (e = document.body.getElementsByTagName("script"))[e.length - 1]).parentNode.insertBefore(n, a), a.parentNode.insertBefore(t, a), n.addEventListener("load", (function () { MyAliceWebChat.init({ selector: "myAliceWebChat", number: "919188330335", message: "", color: "#25D366", channel: "wa", boxShadow: "none", text: "Message Us", theme: "light", position: "left", mb: "20px", mx: "20px", radius: "20px" }) }))) }();</script>
 </body>
 
 </html>
