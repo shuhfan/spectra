@@ -315,6 +315,13 @@ const logout = (req, res, next) => {
   }
 }
 
+const loadPrivacyPolicy = (req,res)=>{
+  res.render('privacy')
+}
+
+const loadTC = (req,res)=>{
+  res.render('TC')
+}
 
 module.exports = {
   loadHome,
@@ -335,4 +342,6 @@ module.exports = {
   signUp,
   login,
   logout,
+  loadPrivacyPolicy,
+  loadTC
 }

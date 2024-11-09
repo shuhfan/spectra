@@ -1,5 +1,15 @@
 <div class="preloader"></div>
+<style>
+    #google_translate_element {
+        display: contents; 
+    }
 
+    @media (max-width: 1024px) {
+        #google_translate_element {
+            display: none; 
+        }
+    }
+</style>
 <header class="main-header header-style-one">
     <div class="header-lower">
         <div class="container-fluid">
@@ -45,7 +55,7 @@
                 </div>
 
                 <div class="outer-box">
-                    <div id="google_translate_element" style="display: contents; cursor: pointer;">
+                    <div id="google_translate_element" class="google-translate-container" style=" cursor: pointer;">
                         <i class="fa-solid fa-globe" onclick="googleTranslateElementInit()"></i>
                     </div>
                     <a href="tel:+919188330335" class="info-btn">
@@ -69,7 +79,7 @@
                 <div class="close-btn"><i class="icon fa fa-times"></i></div>
             </div>
             <ul class="navigation clearfix">
-
+                
             </ul>
             <ul class="contact-list-one">
                 <li>
@@ -92,9 +102,10 @@
                         <span class="title">Office Hours</span>
                         Mon - Sat 8:00 - 6:30, Sunday - CLOSED
                     </div>
-
+                    
                 </li>
             </ul>
+            
             <ul class="social-links">
                 <li><a href="#"><i class="fab fa-twitter"></i></a></li>
                 <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>

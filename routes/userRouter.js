@@ -64,8 +64,8 @@ userRouter.get('/services/:id',userController.loadServicesDetails)
 userRouter.get('/careers',userController.loadCareers)
 userRouter.get('/career-details/:id',userController.loadCareerDetails)
 userRouter.get('/warrenty-registration',userController.loadWarrantyResgistration)
-
-
+userRouter.get('/terms-and-conditions',userController.loadTC)
+userRouter.get('/privacy-policy',userController.loadPrivacyPolicy)
 
 userRouter.post('/signup',userController.signUp)
 userRouter.post('/login',userController.login)
