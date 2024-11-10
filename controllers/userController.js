@@ -82,11 +82,14 @@ const loadServices = async (req, res) => {
 const loadServicesDetails = async (req, res) => {
   const { id } = req.params;
   try {
+    const userID = req.session.user_id || (req.isAuthenticated() && req.user.id);
+    const [user] = await db.query('SELECT * FROM users WHERE id = ?',[userID])
+    
       const [service] = await db.query('SELECT * FROM services WHERE id = ?', [id]);
       if (service.length === 0) {
           return res.status(404).send('Service not found');
       }
-      res.render('service-detail', { service: service[0] });
+      res.render('service-detail', { service: service[0],user: user[0] });
   } catch (error) {
       console.error(error);
       res.status(500).send('Server Error');
@@ -216,6 +219,148 @@ const verifyPayment = async (req, res) => {
   }
 };
 
+const paymentSuccess = (req, res) => {
+  const { service, userEmail } = req.body;
+
+  // Admin email
+  const adminEmail = process.env.EMAIL;
+
+  // Create email content
+  const emailSubject = `Payment Received for Service: ${service.title}`;
+
+  // HTML email content for user
+  const userEmailHtml = `
+      <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+            .container { width: 100%; padding: 20px; background-color: #fff; }
+            .header { background-color: #28a745; padding: 20px; text-align: center; color: white; font-size: 1.5rem; }
+            .content { padding: 20px; font-size: 1rem; color: #333; line-height: 1.5; }
+            .footer { background-color: #f4f4f4; padding: 15px; text-align: center; font-size: 0.9rem; color: #777; }
+            .button { background-color: #28a745; color: white; padding: 12px 25px; text-align: center; border-radius: 5px; text-decoration: none; display: inline-block; }
+            .button:hover { background-color: #218838; }
+            .details-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            .details-table th, .details-table td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+            .details-table th { background-color: #f1f1f1; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              Payment Successful for <strong>${service.title}</strong>
+            </div>
+            <div class="content">
+              <p>Dear <strong>Customer</strong>,</p>
+              <p>Your payment has been successfully processed for the service: <strong>${service.title}</strong>.</p>
+              <p>Here are the details:</p>
+              <table class="details-table">
+                <tr>
+                  <th>Amount</th>
+                  <td>₹${service.amount}</td>
+                </tr>
+                <tr>
+                  <th>Description</th>
+                  <td>${service.description}</td>
+                </tr>
+              </table>
+              <p>Thank you for your purchase!</p>
+              <p>If you have any questions or need assistance, feel free to <a href="mailto:${adminEmail}" class="button">Contact Us</a>.</p>
+            </div>
+            <div class="footer">
+              <p>Best regards, <br>Spectrra</p>
+            </div>
+          </div>
+        </body>
+      </html>
+  `;
+  
+  // HTML email content for admin
+  const adminEmailHtml = `
+      <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+            .container { width: 100%; padding: 20px; background-color: #fff; }
+            .header { background-color: #28a745; padding: 20px; text-align: center; color: white; font-size: 1.5rem; }
+            .content { padding: 20px; font-size: 1rem; color: #333; line-height: 1.5; }
+            .footer { background-color: #f4f4f4; padding: 15px; text-align: center; font-size: 0.9rem; color: #777; }
+            .details-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            .details-table th, .details-table td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+            .details-table th { background-color: #f1f1f1; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              New Payment Received for <strong>${service.title}</strong>
+            </div>
+            <div class="content">
+              <p>A new payment has been successfully processed for the service: <strong>${service.title}</strong>.</p>
+              <p>Here are the details:</p>
+              <table class="details-table">
+                <tr>
+                  <th>Amount</th>
+                  <td>₹${service.amount}</td>
+                </tr>
+                <tr>
+                  <th>Description</th>
+                  <td>${service.description}</td>
+                </tr>
+                <tr>
+                  <th>User Email</th>
+                  <td>${userEmail}</td>
+                </tr>
+              </table>
+            </div>
+            <div class="footer">
+              <p>Best regards, <br>Spectrra</p>
+            </div>
+          </div>
+        </body>
+      </html>
+  `;
+
+  // Email options for user
+  const userMailOptions = {
+      from: process.env.EMAIL,
+      to: userEmail,
+      subject: emailSubject,
+      html: userEmailHtml  // Use HTML content for the email body
+  };
+
+  // Email options for admin
+  const adminMailOptions = {
+      from: process.env.EMAIL,
+      to: adminEmail,
+      subject: `New Payment Received: ${service.title}`,
+      html: adminEmailHtml  // Use HTML content for the email body
+  };
+
+  // Send email to user
+  transporter.sendMail(userMailOptions, (err, info) => {
+      if (err) {
+          console.log('Error sending user email:', err);
+          return;  // Avoid calling res.status() here to prevent premature termination
+      }
+      console.log('Email sent to user:', info.response);
+
+      // Send email to admin only after user email is successfully sent
+      transporter.sendMail(adminMailOptions, (err, info) => {
+          if (err) {
+              console.log('Error sending admin email:', err);
+              return;  // Avoid calling res.status() here to prevent premature termination
+          }
+          console.log('Email sent to admin:', info.response);
+          
+          // Send response to client after both emails are successfully sent
+          res.status(200).json({
+              message: 'Payment details sent successfully',
+              
+          });
+      });
+  });
+}
 
 const loadLogin = (req, res) => {
   res.render('login')
@@ -278,7 +423,7 @@ const login = async (req, res) => {
 
       // Compare the provided password with the hashed password in the database
       const isMatch = await bcrypt.compare(password, user.password);
-      console.log('Password Match:', isMatch)
+      
       if (!isMatch) {
           return res.status(400).send('Invalid password.');
       }
@@ -323,6 +468,14 @@ const loadTC = (req,res)=>{
   res.render('TC')
 }
 
+const loadShippingPolicy = (req,res)=>{
+  res.render('shipping')
+}
+
+const loadRefundPolicy = (req,res)=>{
+  res.render('refund')
+}
+
 module.exports = {
   loadHome,
   loadAboutUs,
@@ -337,11 +490,14 @@ module.exports = {
   loadWarrantyResgistration,
   warrantyRegister,
   verifyPayment,
+  paymentSuccess,
   loadLogin,
   loadSignup,
   signUp,
   login,
   logout,
   loadPrivacyPolicy,
-  loadTC
+  loadTC,
+  loadShippingPolicy,
+  loadRefundPolicy
 }

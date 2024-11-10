@@ -1,128 +1,171 @@
 <div class="page-wrapper">
-
     <%- include('../partials/userHeader') %>
 
-    <style>
-        .hero-section {
-            background-position: center;
-            height: 165px;
-            display: flex;
-            align-items: end;
-            justify-content: center;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-        }
-        .service-details {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            font-size: 2.5rem;
-        }
-        h2 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-        }
-        .img-fluid {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-        }
-        p {
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-        .btn-success {
-            background-color: #28a745;
-            color: white;
-            border-radius: 4px;
-            padding: 12px;
-            font-size: 1.1rem;
-        }
-        .btn-success:hover {
-            background-color: #218838;
-        }
-        .btn-success.btn-block {
-            width: 100%;
-        }
-        .alert {
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 4px;
-        }
-        .alert-warning {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-        @media (max-width: 768px) {
+        <style>
             .hero-section {
-                height: 200px;
-                font-size: 1.5rem;
+                background-position: center;
+                height: 165px;
+                display: flex;
+                align-items: end;
+                justify-content: center;
+                color: white;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
             }
+
+            .service-details {
+                margin-top: 20px;
+                padding: 20px;
+                background-color: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+
             h1 {
-                font-size: 2rem;
+                font-size: 2.5rem;
             }
+
             h2 {
-                font-size: 1.5rem;
+                font-size: 2rem;
+                margin-bottom: 20px;
             }
-        }
-    </style>
-</head>
-<body>
-    <div class="hero-section">
-        <h1 class="text-center">
-            <%= service.title %>
-        </h1>
-    </div>
-    <div class="container service-details mt-4">
-        <img src="/uploads/<%= service.image %>" alt="<%= service.title %>" class="img-fluid mb-4">
-        <p><strong>Description:</strong> <%= service.description %></p>
-        <p><strong>Amount:</strong> $<%= service.amount %></p>
-        <% if (service.additional_info) { %>
-            <p><strong>Additional Information:</strong> <%= service.additional_info %></p>
-        <% } %>
-        <div class="text-center">
-            <button id="rzp-button1" class="btn btn-success btn-block">Pay Now</button>
+
+            .img-fluid {
+                max-width: 100%;
+                height: auto;
+                border-radius: 8px;
+            }
+
+            p {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+
+            .btn-success {
+                background-color: #28a745;
+                color: white;
+                border-radius: 4px;
+                padding: 12px;
+                font-size: 1.1rem;
+            }
+
+            .btn-success:hover {
+                background-color: #218838;
+            }
+
+            .btn-success.btn-block {
+                width: 100%;
+            }
+
+            .alert {
+                padding: 15px;
+                margin-top: 20px;
+                border-radius: 4px;
+            }
+
+            .alert-warning {
+                background-color: #fff3cd;
+                color: #856404;
+            }
+
+            @media (max-width: 768px) {
+                .hero-section {
+                    height: 200px;
+                    font-size: 1.5rem;
+                }
+
+                h1 {
+                    font-size: 2rem;
+                }
+
+                h2 {
+                    font-size: 1.5rem;
+                }
+            }
+        </style>
+
+        <div class="hero-section">
+            <h1 class="text-center">
+                <%= service.title %>
+            </h1>
         </div>
-    </div>
-    <%- include('../partials/userFooter') %>
+
+        <div class="container service-details mt-4">
+            <img src="/uploads/<%= service.image %>" alt="<%= service.title %>" class="img-fluid mb-4">
+            <p><strong>Description:</strong>
+                <%= service.description %>
+            </p>
+            <p><strong>Amount:</strong> ₹<%= service.amount %>
+            </p>
+
+            <% if (service.additional_info) { %>
+                <p><strong>Additional Information:</strong>
+                    <%= service.additional_info %>
+                </p>
+                <% } %>
+
+                    <div class="text-center">
+                        <button id="rzp-button1" class="btn btn-success btn-block">Pay Now</button>
+                    </div>
+        </div>
+
+        <%- include('../partials/userFooter') %>
+
+            <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+            <script>
+                document.getElementById('rzp-button1').onclick = function (e) {
+                    var options = {
+                        "key": "rzp_test_wYINav8ro4ngpH",  // Enter your Razorpay key here
+                        "amount": "<%= service.amount * 100 %>",  // Amount in paise (multiply by 100 for INR)
+                        "currency": "INR",  // Currency (default is INR)
+                        "name": "<%= service.title %>",  // Name of the service
+                        "description": "<%= service.description %>",  // Description of the service
+                        "image": "/uploads/<%= service.image %>",  // Image related to the service (optional)
+                        "handler": function (response) {
+                            // Send payment details to the backend to send email notifications
+                            fetch('/payment-success', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    service: {
+                                        title: "<%= service.title %>",
+                                        description: "<%= service.description %>",
+                                        amount: "<%= service.amount %>",
+                                        image: "<%= service.image %>"
+                                    },
+                                    userEmail: "<%= user.email %>",  // Assuming user email is available in the template
+                                    
+                                })
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log('Payment Success Response:', data);  // Log the response data
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Payment Successful!',
+                                        text: 'Service booked we will contact you shortly',
+                                        showConfirmButton: true,
+                                        confirmButtonText: 'OK'
+                                    });
+                                })
+                                .catch(error => {
+                                    console.error('Error sending email:', error);
+                                });
+                        },
+                        "prefill": {
+                            "name": "",
+                            "email": "",
+                            "contact": ""
+                        },
+                        "theme": {
+                            "color": "#28a745"
+                        }
+                    };
+
+                    var rzp1 = new Razorpay(options);
+                    rzp1.open();
+                    e.preventDefault();
+                };
+            </script>
 </div>
-
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script>
-    document.getElementById('rzp-button1').onclick = function(e) {
-        var options = {
-            "key": "rzp_test_wYINav8ro4ngpH",  // Enter your Razorpay key here
-            "amount": "<%= service.amount * 100 %>",  // Amount in paise (multiply by 100 for INR)
-            "currency": "INR",  // Currency (default is INR)
-            "name": "<%= service.title %>",  // Name of the service
-            "description": "<%= service.description %>",  // Description of the service
-            "image": "/uploads/<%= service.image %>",  // Image related to the service (optional)
-            "handler": function (response){
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Payment Successful!',
-                    text: 'Your payment ID is: ' + response.razorpay_payment_id,
-                    showConfirmButton: true,
-                    confirmButtonText: 'OK'
-                });
-            },
-            "prefill": {
-                "name": "",  // User's name (can be pre-filled if available)
-                "email": "",  // User's email (can be pre-filled if available)
-                "contact": ""  // User's contact number (can be pre-filled if available)
-            },
-            "theme": {
-                "color": "#28a745"  // Customize the color of the Razorpay popup
-            }
-        };
-
-        var rzp1 = new Razorpay(options);
-        rzp1.open();
-        e.preventDefault();
-    };
-</script>
-
