@@ -1,0 +1,117 @@
+<div class="login-container">
+    <form class="login-form" action="/admin/login" method="POST">
+        <h2>Admin Login</h2>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label><br>
+            <input style="width: 100%;" type="password" id="password" name="password" required>
+        </div>
+        <button type="submit">Login</button>
+        
+    </form>
+</div>
+
+<style>
+    body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #8eb6e0, #0056b3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.login-container {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 400px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+}
+
+input {
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.form-footer a {
+    text-decoration: none;
+    color: #007bff;
+    transition: color 0.3s;
+}
+
+.form-footer a:hover {
+    color: #0056b3;
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+    .login-container {
+        padding: 1.5rem;
+        width: 80%;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    button {
+        font-size: 0.9rem;
+        padding: 0.75rem;
+    }
+}
+</style>

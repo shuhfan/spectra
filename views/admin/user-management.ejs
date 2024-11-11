@@ -136,21 +136,82 @@ td a:hover {
                                         <td><%= user.name %></td>
                                         <td><%= user.email %></td>
                                         <td><%= user.phone %></td>
-                                        <td><%= user.registered_date %></td>
                                         <td>
-                                            <a href="/admin/users/delete/<%= user.id %>"><i class="fas fa-trash"></i></a>
+                                            <% 
+                                              const date = new Date(user.registered_date);
+                                              const formattedDate = date.toLocaleDateString("en-IN", {
+                                                month: "short", // "Nov"
+                                                day: "numeric", // "10"
+                                                year: "numeric" // "2024"
+                                              });
+                                            %>
+                                            <%= formattedDate %>
+                                          </td>
+                                          
+                                        <td>
+                                            <!-- Delete Action -->
+                                            <a href="#"onclick="confirmDeleteUser(<%= user.id %>)"><i class="fas fa-trash"></i></a>
+                &nbsp;
+                                            <!-- File Upload Icon -->
+                                            <a href="javascript:void(0)" class="upload-icon" data-toggle="modal" data-target="#uploadModal<%= user.id %>">
+                                                <i class="fas fa-upload" title="Upload File"></i>
+                                            </a>
                                         </td>
                                     </tr>
+                
+                                    <!-- Modal for File Upload -->
+                                    <div class="modal fade" id="uploadModal<%= user.id %>" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel<%= user.id %>" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="uploadModalLabel<%= user.id %>">Upload File for <%= user.name %></h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <form action="/admin/upload-file/<%= user.id %>" method="POST" enctype="multipart/form-data">
+                                                    <div class="modal-body">
+                                                        <!-- Title Input Field -->
+                                                        <div class="form-group">
+                                                            <label for="fileTitle<%= user.id %>"> Title</label>
+                                                            <input type="text" class="form-control" name="file_title" id="fileTitle<%= user.id %>" placeholder="Enter file title" required>
+                                                        </div>
+                
+                                                        <!-- File Input Field -->
+                                                        <div class="form-group">
+                                                            <label for="fileInput<%= user.id %>">Select File</label>
+                                                            <input type="file" name="file" id="fileInput<%= user.id %>" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Upload</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                 <% }) %>
                             </tbody>
                         </table>
                     </div>
-                </div>                
+                </div>             
             </div>
         </main>
 	
 		
-		
+		<% if (message) { %>
+            <script>
+                // Check the message type and show the appropriate SweetAlert
+                Swal.fire({
+                    title: `<%= message.type === 'success' ? 'Success' : 'Error' %>`,
+                    text: '<%= message.text %>',
+                    icon: '<%= message.type %>',
+                    confirmButtonText: 'OK'
+                });
+            </script>
+        <% } %>
+        
 	<footer class="footer">
 		<span>Copyright &copy;  2024 Specterra Geotech Private Limited. All rights reserved.</span>
 	</footer>
@@ -161,3 +222,43 @@ td a:hover {
 <!-- ============================================================== -->
 
 
+<script>
+    async function confirmDeleteUser(userId) {
+        swal.fire({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this user!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                fetch(`/admin/user-delete/${userId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        swal.fire("User has been deleted!", {
+                            icon: "success",
+                        }).then(() => {
+                            location.reload(); // reload the page or update the UI
+                        });
+                    } else {
+                        return response.json().then(errorData => {
+                            swal.fire("Error deleting user: " + errorData.message, {
+                                icon: "error",
+                            });
+                        });
+                    }
+                })
+                .catch(error => {
+                    swal.fire("An error occurred: " + error.message, {
+                        icon: "error",
+                    });
+                });
+            } else {
+                swal.fire("User deletion canceled.");
+            }
+        });
+    }
+    </script>

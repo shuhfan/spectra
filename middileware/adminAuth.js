@@ -3,7 +3,7 @@ const isLogin = async (req,res,next)=>{
         if(req.session.admin_id){
             next()
         }else{
-            res.render('adminLogin',{message:''})
+            res.render('login',{message:''})
         }
     }
     catch (error){

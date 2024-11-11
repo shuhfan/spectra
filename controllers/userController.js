@@ -116,7 +116,7 @@ const uploadCV = (req,res)=>{
     from: process.env.EMAIL,
     to: process.env.EMAIL,
     subject: `New CV Submission for ${jobTitle}`,
-    html: ` <h2>New Job Application Received</h2> <p><strong>Job Title:</strong> ${jobTitle}</p> <p><strong>Company:</strong> ${companyName}</p> <p><strong>Location:</strong> ${location}</p> <p><strong>Salary Range:</strong> $${salaryRange}</p> <h3>Description</h3> <p>${jobDescription}</p> <h3>Requirements</h3> <p>${requirements}</p> <p>Please find the CV attached below.</p> `,
+    html: ` <h2>New Job Application Received</h2> <p><strong>Job Title:</strong> ${jobTitle}</p> <p><strong>Company:</strong> ${companyName}</p> <p><strong>Location:</strong> ${location}</p> <p><strong>Salary Range:</strong> $${salaryRange}</p> <h3>Description</h3> <pre>${jobDescription}</pre> <h3>Requirements</h3> <pre>${requirements}</pre> <p>Please find the CV attached below.</p> `,
     attachments: [
       {
         filename:file,
@@ -144,7 +144,6 @@ const loadCareerDetails = async (req, res) => {
       if (!job) {
           return res.status(404).send('Job not found');
       }
-      console.log(job);
       
       res.render('career-details', { job: job[0] });
   } catch (error) {
@@ -173,7 +172,7 @@ const warrantyRegister = async (req, res) => {
           <p><strong>Invoice Date:</strong> ${invoice_date}</p>
           <p><strong>Company Name:</strong> ${company_name}</p>
           <p><strong>Company Address:</strong></p>
-          <p>${company_address}</p>
+          <pre>${company_address}</pre>
       `
   };
 
@@ -191,16 +190,27 @@ const verifyPayment = async (req, res) => {
 
   try {
       const payment = await razorpayInstance.payments.fetch(razorpay_payment_id);
-      
-      console.log(payment.status);  // Log the payment details for debugging
 
       if (payment.status === 'authorized') {
           // Capture the payment
           const captureResponse = await razorpayInstance.payments.capture(razorpay_payment_id, amount * 100);
-          console.log(captureResponse.status);  // Log the capture response for debugging
 
           if (captureResponse.status === 'captured') {
               // Payment successfully captured
+              const mailOptions = {
+                from: process.env.EMAIL, // sender address
+                to: process.env.EMAIL,                // send email to admin
+                subject: 'AMC Registration Payment Captured', // Subject line
+                text: `A new payment has been captured.\n\nDetails:\n- Payment ID: ${razorpay_payment_id}\n- Amount: ₹${amount}\n- Payer Name: ${name}\n- Contact: ${contact}\n- Email: ${email}\n- Company Name: ${companyName}\n- Company Address: ${companyAddress}\n\nThank you!`, // email body
+            };
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.error('Error sending email:', error);
+                } else {
+                    console.log('Admin notification email sent: ' + info.response);
+                }
+            });
               res.status(200).json({ success: true, message: 'Payment verified and captured successfully.' });
           } else {
               // Payment capture failed
@@ -268,7 +278,7 @@ const paymentSuccess = (req, res) => {
               <p>If you have any questions or need assistance, feel free to <a href="mailto:${adminEmail}" class="button">Contact Us</a>.</p>
             </div>
             <div class="footer">
-              <p>Best regards, <br>Spectrra</p>
+              <p>Best regards, <br>Specterra</p>
             </div>
           </div>
         </body>
@@ -314,7 +324,7 @@ const paymentSuccess = (req, res) => {
               </table>
             </div>
             <div class="footer">
-              <p>Best regards, <br>Spectrra</p>
+              <p>Best regards, <br>Specterra</p>
             </div>
           </div>
         </body>
@@ -476,6 +486,18 @@ const loadRefundPolicy = (req,res)=>{
   res.render('refund')
 }
 
+const loadProfile = async(req,res)=>{
+  try {
+    const userID = req.session.user_id || (req.isAuthenticated() && req.user.id);
+    const [files] = await db.query('SELECT file_name, file_path FROM user_files WHERE user_id = ?',[userID])
+
+    res.render('profile',{files:files|| []})
+  } catch (error) {
+    console.log(error.message);
+    
+  }
+}
+
 module.exports = {
   loadHome,
   loadAboutUs,
@@ -499,5 +521,6 @@ module.exports = {
   loadPrivacyPolicy,
   loadTC,
   loadShippingPolicy,
-  loadRefundPolicy
+  loadRefundPolicy,
+  loadProfile,
 }

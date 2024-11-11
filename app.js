@@ -4,7 +4,12 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-
+const preventCache = (req, res, next) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.set('Pragma', 'no-cache');
+  res.set('Expires', '0');
+  next();
+};
 var usersRouter = require('./routes/userRouter');
 var adminRouter = require('./routes/adminRouter')
 
@@ -21,8 +26,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.use('/', usersRouter);
-app.use('/admin',adminRouter);
+app.use('/',preventCache, usersRouter);
+app.use('/admin',preventCache,adminRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

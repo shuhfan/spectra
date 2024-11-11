@@ -4,7 +4,52 @@ const path = require('path');
 const fs = require('fs');
 
 
-const loadDashbord = async(req,res)=>{
+const loadLogin = (req, res) => {
+    res.render('login')
+}
+
+const login = async (req, res) => {
+    const { email, password } = req.body;
+
+    // Check if email and password are provided
+    if (!email || !password) {
+        return res.status(400).send('Email and password are required.');
+    }
+
+    try {
+        // Query the database for the user by email
+        const [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+
+        // Check if the user exists
+        if (users.length === 0) {
+            return res.status(400).send('User does not exist! Create a new account.');
+        }
+
+        const user = users[0];
+
+        // Check if the user is an admin
+        if (!user.isAdmin) {
+            return res.status(403).send('Access denied: You do not have admin privileges.');
+        }
+
+        // Compare the provided password with the hashed password in the database
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.status(400).send('Invalid password.');
+        }
+
+        // Store user ID in session
+        req.session.admin_id = user.id;
+
+        res.redirect('/admin');
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).send('Server error');
+    }
+};
+
+const loadDashbord = async (req, res) => {
     try {
         const counts = await getCounts();
         res.render('dashboard', { counts });
@@ -14,78 +59,78 @@ const loadDashbord = async(req,res)=>{
     }
 }
 
-const loadUserManagement = async(req,res)=>{
+const loadUserManagement = async (req, res) => {
     try {
-        const [users] = await db.query('SELECT name, email, phone, DATE_FORMAT(registered_date, "%b %d %Y") AS registered_date FROM users')
-        
-        res.render('user-management',{users})
+        const [users] = await db.query('SELECT * FROM users')
+
+        res.render('user-management', { users, message: '' })
     } catch (error) {
         console.log(error.message);
     }
-    
+
 }
 
-const loadAddServices = (req,res)=>{
+const loadAddServices = (req, res) => {
     res.render('add-services')
 }
 
-const loadAllServices = async(req,res)=>{
+const loadAllServices = async (req, res) => {
     try {
         const [services] = await db.query('SELECT * FROM services')
-        res.render('all-services',{services})
+        res.render('all-services', { services })
     } catch (error) {
         console.log(error.message);
-        
+
     }
-    
+
 }
 
-const loadAddImages = (req,res)=>{
+const loadAddImages = (req, res) => {
     res.render('add-images')
 }
 
-const loadAllImages = async(req,res)=>{
+const loadAllImages = async (req, res) => {
     try {
         const [images] = await db.query('SELECT * FROM gallery')
-        res.render('all-images',{images})
+        res.render('all-images', { images })
     } catch (error) {
         console.log(error.message);
-        
+
     }
 }
 
-const loadAddCareers = (req,res)=>{
+const loadAddCareers = (req, res) => {
     res.render('add-careers')
 }
 
-const loadAllCareers = async(req,res)=>{
+const loadAllCareers = async (req, res) => {
     try {
         const [careers] = await db.query('SELECT * FROM careers')
-        res.render('all-careers',{careers})
+        res.render('all-careers', { careers })
     } catch (error) {
         console.log(error.message);
-        
+
     }
 }
 
-const addService =async (req, res) => {
+const addService = async (req, res) => {
     const { title, description, amount } = req.body;
-    const imagePath = req.file ? req.file.filename : null; 
-  
+    const imagePath = req.file ? req.file.filename : null;
+
     if (!title || !description || !amount || !imagePath) {
-      return res.status(400).send('All fields are required.');
+        return res.status(400).send('All fields are required.');
     }
-      
+
     await db.query('INSERT INTO services (title, description, amount, image) VALUES (?, ?, ?, ?)', [title, description, amount, imagePath])
-      res.redirect('/admin/all-services'); 
+    res.redirect('/admin/all-services');
     ;
 }
 
-const deleteServices = async(req, res) => {
+const deleteServices = async (req, res) => {
     const serviceId = req.params.id;
 
     await db.query('DELETE FROM services WHERE id = ?', [serviceId])
-      res.redirect('/admin/all-services'); 
+    res.redirect('/admin/all-services');
 }
 
 const loadEditServices = async (req, res) => {
@@ -95,7 +140,7 @@ const loadEditServices = async (req, res) => {
         const [service] = await db.query('SELECT * FROM services WHERE id = ?', [serviceId]);
 
         if (!service || service.length === 0) {
-            return res.status(404).send('Service not found'); 
+            return res.status(404).send('Service not found');
         }
 
         res.render('edit-services', { service: service[0] });
@@ -105,15 +150,15 @@ const loadEditServices = async (req, res) => {
     }
 };
 
-const editServices =  async (req, res) => {
+const editServices = async (req, res) => {
     const serviceId = req.params.id;
     const { title, description, amount } = req.body;
 
     try {
-        const [results] =  await db.query('SELECT image FROM services WHERE id = ?', [serviceId])
+        const [results] = await db.query('SELECT image FROM services WHERE id = ?', [serviceId])
 
-            const oldImageFilename = results[0].image;
-            const oldImagePath = path.join(__dirname, '..', 'public', 'uploads', oldImageFilename);
+        const oldImageFilename = results[0].image;
+        const oldImagePath = path.join(__dirname, '..', 'public', 'uploads', oldImageFilename);
 
         let sql = 'UPDATE services SET title = ?, description = ?, amount = ?';
         const params = [title, description, amount];
@@ -136,7 +181,7 @@ const editServices =  async (req, res) => {
         // Execute the SQL statement
         await db.query(sql, params)
 
-        res.redirect('/admin/all-services'); 
+        res.redirect('/admin/all-services');
 
     } catch (error) {
         console.error(error);
@@ -146,7 +191,7 @@ const editServices =  async (req, res) => {
 
 const addImage = async (req, res) => {
     const { imageTitle } = req.body;
-    const imagePath = req.file ? req.file.filename : null; 
+    const imagePath = req.file ? req.file.filename : null;
 
     if (!imageTitle || !imagePath) {
         return res.status(400).send('Image title and file are required.');
@@ -161,7 +206,7 @@ const addImage = async (req, res) => {
     }
 }
 
-const deleteImage = async(req, res) => {
+const deleteImage = async (req, res) => {
     const imageId = req.params.id;
     try {
         const [imageRecord] = await db.query('SELECT image_path FROM gallery WHERE id = ?', [imageId]);
@@ -175,72 +220,73 @@ const deleteImage = async(req, res) => {
             if (err) {
                 console.error('Error deleting file from filesystem:', err);
                 return res.status(500).send('Error deleting image file');
-            }})
+            }
+        })
         await db.query('DELETE FROM gallery WHERE id = ?', [imageId])
-        res.redirect('/admin/all-images'); 
+        res.redirect('/admin/all-images');
     } catch (error) {
         console.error('Error deleting image:', error);
         res.status(500).send('Internal Server Error');
-    }   
+    }
 }
 
-const addCareers =  async(req, res) => {
+const addCareers = async (req, res) => {
     const {
-      'job-title': jobTitle,
-      'company-name': companyName,
-      'job-description': jobDescription,
-      requirements,
-      location,
-      'salary-range': salaryRange,
-      'employment-type': employmentType,
-      'application-deadline': applicationDeadline,
-      'contact-number': contactNumber
+        'job-title': jobTitle,
+        'company-name': companyName,
+        'job-description': jobDescription,
+        requirements,
+        location,
+        'salary-range': salaryRange,
+        'employment-type': employmentType,
+        'application-deadline': applicationDeadline,
+        'contact-number': contactNumber
     } = req.body;
-  
+
     if (
-      !jobTitle ||
-      !companyName ||
-      !jobDescription ||
-      !requirements ||
-      !location ||
-      !employmentType ||
-      !applicationDeadline ||
-      !contactNumber
+        !jobTitle ||
+        !companyName ||
+        !jobDescription ||
+        !requirements ||
+        !location ||
+        !employmentType ||
+        !applicationDeadline ||
+        !contactNumber
     ) {
-      return res.status(400).send('All required fields must be filled.');
+        return res.status(400).send('All required fields must be filled.');
     }
-  
+
     const query = `
       INSERT INTO careers 
       (job_title, company_name, job_description, requirements, location, salary_range, employment_type, application_deadline, contact_number) 
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     const values = [
-      jobTitle,
-      companyName,
-      jobDescription,
-      requirements,
-      location,
-      salaryRange,
-      employmentType,
-      applicationDeadline,
-      contactNumber
+        jobTitle,
+        companyName,
+        jobDescription,
+        requirements,
+        location,
+        salaryRange,
+        employmentType,
+        applicationDeadline,
+        contactNumber
     ];
-  
-    await db.query(query, values) 
-      res.redirect('/admin/all-careers'); 
-    
+
+    await db.query(query, values)
+    res.redirect('/admin/all-careers');
+
 }
 
-const deleteCareers = async(req,res)=>{
+const deleteCareers = async (req, res) => {
     const careersId = req.params.id;
     try {
         await db.query('DELETE FROM careers WHERE id = ?', [careersId])
-        res.redirect('/admin/all-careers'); 
+        res.redirect('/admin/all-careers');
     } catch (error) {
         console.error('Error deleting careers:', error);
         res.status(500).send('Internal Server Error');
-    } 
+    }
 }
 
 const getCounts = async () => {
@@ -257,7 +303,80 @@ const getCounts = async () => {
     };
 };
 
+const uploadResult = async (req, res) => {
+    const userId = req.params.id;
+    const fileTitle = req.body.file_title;
+    const filePath = '/uploads/' + req.file.filename;
+
+    try {
+        const [users] = await db.query('SELECT * FROM users');
+
+        // Insert the uploaded file details into the database
+        const sql = 'INSERT INTO user_files (user_id, file_name, file_path) VALUES (?, ?, ?)';
+        await db.query(sql, [userId, fileTitle, filePath]);
+
+        // Send a success message and render the page with users data
+        res.render('user-management', {
+            message: { type: 'success', text: 'File uploaded successfully!' },
+            users: users
+        });
+    } catch (err) {
+        // Handle any errors that occurred during the query or file upload
+        console.error(err); // Log the error for debugging
+        res.render('user-management', {
+            message: { type: 'error', text: 'Error uploading file. Please try again!' },
+            users: users
+        });
+    }
+};
+
+const logout = (req, res, next) => {
+    try {
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Error while signing out:', err);
+                return res.status(500).send('Error occurred during signout.');
+            }
+            res.clearCookie('connect.sid'); // This clears the session ID cookie
+            res.redirect('/admin/login'); // Redirect to login page or any other page after signout
+        });
+    } catch (error) {
+        console.log(error.message);
+
+    }
+}
+
+const userDelete = async (req,res)=>{
+    const userId = req.params.id;
+
+    try {
+        const [user] = await db.query('SELECT * FROM users WHERE id = ?', [userId]);
+
+        if (user.length === 0) {
+            return res.status(404).json({
+                message: 'User not found'
+            });
+        }
+
+        // Delete the user from the database
+        await db.query('DELETE FROM users WHERE id = ?', [userId]);
+
+        res.status(200).json({
+            message: 'User successfully deleted'
+        });
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).json({
+            message: 'Server error while deleting user',
+            error: error.sqlMessage || error.message
+        });
+    }
+}
+
 module.exports = {
+    loadLogin,
+    login,
+    logout,
     loadDashbord,
     loadUserManagement,
     loadAddServices,
@@ -275,4 +394,6 @@ module.exports = {
     getCounts,
     loadEditServices,
     editServices,
+    uploadResult,
+    userDelete,
 }

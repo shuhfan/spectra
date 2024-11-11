@@ -92,10 +92,10 @@
             <p><strong>Salary Range:</strong> $<%= job.salary_range %></p>
             
             <h5>Description:</h5>
-            <p><%= job.job_description %></p>
+            <pre style="white-space: pre-wrap;"><%= job.job_description %></pre>
             
             <h5>Requirements:</h5>
-            <p><%= job.requirements %></p>
+            <pre style="white-space: pre-wrap;"><%= job.requirements %></pre>
 
             <!-- CV Upload Section -->
             <form id="cvUploadForm" enctype="multipart/form-data" class="mt-4">
