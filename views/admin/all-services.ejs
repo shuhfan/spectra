@@ -1,123 +1,125 @@
+<!-- all-services.ejs -->
+<%- include('../partials/adminTopBar') %>
+<%- include('../partials/adminNav') %>
 
-
-<%-include('../partials/adminTopBar')%>
-		
-<%-include('../partials/adminNav')%>
-
-    
-<!-- ============================================================== -->
-<!-- 						Content Start	 						-->
-<!-- ============================================================== -->
 <div class="row page-header">
-        <div class="col-lg-6 align-self-center ">
-          <h2>All Service</h2>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active">All Service</li>
-            </ol>
-        </div>
-        
+    <div class="col-lg-6 align-self-center ">
+        <h2>All Services</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">All Services</li>
+        </ol>
+    </div>
 </div>
 
-
 <section class="main-content">
-
-	<style>
-        .service-card {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow to each card */
-    border-radius: 8px;                       /* Rounded corners */
-    overflow: hidden;                          /* Ensures rounded corners work on all elements */
-    border: none;                              /* Remove default border */
-    margin-bottom: 20px;                       /* Adds spacing between cards */
-    transition: transform 0.2s;                /* Smooth hover effect */
-}
-
-.service-card:hover {
-    transform: translateY(-5px);               /* Elevates the card slightly on hover */
-}
-
-.card-img-top {
-    height: 200px;                             /* Set a fixed height for images */
-    width: 100%;                               /* Full width to cover the card */
-    object-fit: contain;                         /* Keeps the aspect ratio and fills the area */
-}
-
-.card-body {
-    padding: 20px;                             /* Adds padding inside the card */
-    background-color: #f8f9fa;                 /* Light background color */
-    text-align: center;
-}
-
-.card-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.card-text {
-    color: #555;
-    font-size: 0.9rem;
-    margin-bottom: 15px;
-}
-
-.btn-primary, .btn-danger {
-    width: 48%;                                /* Makes buttons side-by-side with equal width */
-    font-size: 0.9rem;
-    margin-top: 10px;
-}
-
-.btn-primary {
-    background-color: #007bff;
-    border: none;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    border: none;
-}
-
-
-
-    </style>
-   
-        
-    <div class="row">
-        <% services.forEach(service => { %>
-            <div class="col-md-4">
-                <div class="card service-card">
-                    <!-- Display the service image -->
-                    <img src="/uploads/<%= service.image %>" class="card-img-top" alt="<%= service.title %>">
-                    <div class="card-body">
-                        <h5 class="card-title"><%= service.title %></h5>
-                        <!-- Truncate the description to 100 characters -->
-                        <p class="card-text">
-                            <%= service.description.length > 100 ? service.description.substring(0, 100) + '...' : service.description %>
-                        </p>
-                        <p class="card-text"><strong>Amount:</strong> $<%= service.amount %></p>
-                        <!-- Link to delete service with the service ID -->
-                        <a href="/admin/edit-services/<%= service.id %>" class="btn btn-primary">Edit</a>
-                        <a href="/admin/delete-services/<%= service.id %>" class="btn btn-danger">Delete</a>
+    <div class="container mt-5">
+        <h2>Main Services</h2>
+        <div class="row">
+            <% mainServices.forEach(service => { %>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title d-flex justify-content-between align-items-center">
+                                <span><%= service.name %></span>
+                                <button class="btn btn-danger btn-sm delete-main-service" data-id="<%= service.id %>">Delete</button>
+                            </h5>
+                            <ul class="list-group list-group-flush">
+                                <% subServices.forEach(subService => { %>
+                                    <% if (subService.main_service_id === service.id) { %>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span><%= subService.name %></span>
+                                            <button class="btn btn-danger btn-sm delete-sub-service" data-id="<%= subService.id %>">Delete</button>
+                                        </li>
+                                    <% } %>
+                                <% }); %>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
-        <% }) %>
+            <% }); %>
+        </div>
+
+        <% if (mainServices.length === 0) { %>
+            <p>No main services available.</p>
+        <% } %>
+
     </div>
-    
-    
-    
-	
 
-        
-
-
-	<footer class="footer">
-		<span>Copyright &copy;  2024 Specterra Geotech Private Limited. All rights reserved.</span>
-	</footer>
+    <footer class="footer mt-5">
+        <span>Copyright &copy; 2024 Specterra Geotech Private Limited. All rights reserved.</span>
+    </footer>
 
 </section>
-<!-- ============================================================== -->
-<!-- 						Content End		 						-->
-<!-- ============================================================== -->
 
+<!-- Include SweetAlert2 -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<script>
+// JavaScript for handling deletions
+document.addEventListener("DOMContentLoaded", function() {
+    // Handle delete for main services
+    document.querySelectorAll('.delete-main-service').forEach(button => {
+        button.addEventListener('click', async function() {
+            const serviceId = this.getAttribute('data-id');
+            const confirmed = await Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            });
+
+            if (confirmed.isConfirmed) {
+                try {
+                    const response = await fetch(`/admin/services/${serviceId}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (!response.ok) throw new Error('Network response was not ok');
+
+                    Swal.fire('Deleted!', 'Main Service has been deleted.', 'success');
+                    location.reload(); // Reload the page to see changes
+                } catch (error) {
+                    console.error('Error deleting main service:', error);
+                    Swal.fire('Error!', 'Failed to delete Main Service.', 'error');
+                }
+            }
+        });
+    });
+
+    // Handle delete for sub-services
+    document.querySelectorAll('.delete-sub-service').forEach(button => {
+        button.addEventListener('click', async function() {
+            const subServiceId = this.getAttribute('data-id');
+            const confirmed = await Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            });
+
+            if (confirmed.isConfirmed) {
+                try {
+                    const response = await fetch(`/admin/subservices/${subServiceId}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (!response.ok) throw new Error('Network response was not ok');
+
+                    Swal.fire('Deleted!', 'Sub-Service has been deleted.', 'success');
+                    location.reload(); // Reload the page to see changes
+                } catch (error) {
+                    console.error('Error deleting sub-service:', error);
+                    Swal.fire('Error!', 'Failed to delete Sub-Service.', 'error');
+                }
+            }
+        });
+    });
+});
+</script>

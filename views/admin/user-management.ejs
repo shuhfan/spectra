@@ -18,99 +18,7 @@
         </div>
         
 </div>
-<!-- <style>
-    /* Main content styling */
-.content {
-    padding: 20px;
-    background-color: #f5f5f5;
-}
 
-.card {
-    border: none;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-}
-
-/* Table styling */
-.table {
-    margin: 0;
-    width: 100%;
-}
-
-.table-hover tbody tr:hover {
-    background-color: #f0f0f5; /* Light hover effect */
-}
-
-thead th {
-    font-weight: bold;
-    color: #333;
-    background-color: #e9ecef; /* Light grey background */
-    border-bottom: 2px solid #dee2e6;
-    padding: 15px;
-}
-
-/* Table row styling */
-tbody tr {
-    transition: background-color 0.2s;
-}
-
-tbody td {
-    padding: 15px;
-    color: #555;
-    font-size: 0.95rem;
-}
-
-/* Action icon styling */
-td a {
-    color: #d9534f; /* Red color for delete icon */
-    font-size: 1.2rem;
-    transition: color 0.2s;
-}
-
-td a:hover {
-    color: #b52a3a; /* Darker red on hover */
-}
-
-.fas.fa-trash {
-    cursor: pointer;
-}
-
-.table td, .table th {
-    text-align: center; /* Center align table data */
-}
-
-@media (max-width: 768px) {
-    /* Responsive adjustments for small screens */
-    .table thead {
-        display: none; /* Hide table header on small screens */
-    }
-
-    .table tbody tr {
-        display: flex;
-        flex-direction: column;
-        border-bottom: 1px solid #ddd;
-        padding: 10px 0;
-    }
-
-    .table tbody td {
-        padding: 10px;
-        font-size: 0.9rem;
-    }
-
-    .table tbody td::before {
-        content: attr(data-label);
-        font-weight: bold;
-        color: #333;
-        display: block;
-    }
-
-    td a {
-        font-size: 1.5rem;
-    }
-}
-
-</style> -->
 
 <section class="main-content">
 
@@ -222,43 +130,44 @@ td a:hover {
 <!-- ============================================================== -->
 
 
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    async function confirmDeleteUser(userId) {
-        swal.fire({
-            title: "Are you sure?",
-            text: "Once deleted, you will not be able to recover this user!",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-        })
-        .then((willDelete) => {
-            if (willDelete) {
-                fetch(`/admin/user-delete/${userId}`, {
-                    method: 'DELETE'
-                })
-                .then(response => {
-                    if (response.ok) {
-                        swal.fire("User has been deleted!", {
-                            icon: "success",
-                        }).then(() => {
-                            location.reload(); // reload the page or update the UI
-                        });
-                    } else {
-                        return response.json().then(errorData => {
-                            swal.fire("Error deleting user: " + errorData.message, {
-                                icon: "error",
-                            });
-                        });
-                    }
-                })
-                .catch(error => {
-                    swal.fire("An error occurred: " + error.message, {
-                        icon: "error",
-                    });
+async function confirmDeleteUser(userId) {
+    const { value: willDelete } = await Swal.fire({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this user!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!',
+    });
+
+    if (willDelete) {
+        try {
+            const response = await fetch(`/admin/user-delete/${userId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                Swal.fire("User has been deleted!", {
+                    icon: "success",
+                }).then(() => {
+                    location.reload(); // reload the page or update the UI
                 });
             } else {
-                swal.fire("User deletion canceled.");
+                const errorData = await response.json();
+                Swal.fire("Error deleting user: " + errorData.message, {
+                    icon: "error",
+                });
             }
-        });
+        } catch (error) {
+            Swal.fire("An error occurred: " + error.message, {
+                icon: "error",
+            });
+        }
+    } else {
+        Swal.fire("User deletion canceled.");
     }
-    </script>
+}
+</script>

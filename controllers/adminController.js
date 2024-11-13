@@ -70,19 +70,83 @@ const loadUserManagement = async (req, res) => {
 
 }
 
-const loadAddServices = (req, res) => {
-    res.render('add-services')
+const loadAddServices = async (req, res) => {
+    try {
+        const [services] = await db.query('SELECT * FROM services');
+        res.render('add-services', { services });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+const MainServices =  async(req, res) => {
+    try {
+        const [services] = await db.query('SELECT * FROM services');
+        res.json(services); // Send the services as JSON response
+    } catch (error) {
+        console.error('Error fetching services:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+const addMainServices = async (req, res) => {
+    const { name } = req.body;
+    try {
+        const [result] = await db.query('INSERT INTO services (name) VALUES (?)', [name]);
+        res.json({ id: result.insertId, name });
+    } catch (error) {
+        console.error('Error adding main service:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+const addSubServices = async (req, res) => {
+    const { name, main_service_id } = req.body;
+    try {
+        const [result] = await db.query('INSERT INTO sub_services (name, main_service_id) VALUES (?, ?)', [name, main_service_id]);
+        res.json({ id: result.insertId, name, main_service_id });
+    } catch (error) {
+        console.error('Error adding sub-service:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+const deleteService = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await db.query('DELETE FROM sub_services WHERE main_service_id = ?', [id]);
+        
+        await db.query('DELETE FROM services WHERE id = ?', [id]);
+        
+        res.status(204).send(); // No content to send back
+    } catch (error) {
+        console.error('Error deleting main service:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+const deleteSubService = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await db.query('DELETE FROM sub_services WHERE id = ?', [id]);
+        res.status(204).send(); // No content to send back
+    } catch (error) {
+        console.error('Error deleting sub-service:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 }
 
 const loadAllServices = async (req, res) => {
     try {
-        const [services] = await db.query('SELECT * FROM services')
-        res.render('all-services', { services })
+        const [mainServices] = await db.query('SELECT * FROM services');
+        const [subServices] = await db.query('SELECT * FROM sub_services');
+
+        res.render('all-services', { mainServices, subServices });
     } catch (error) {
-        console.log(error.message);
-
+        console.error(error.message);
+        res.status(500).send('Internal Server Error');
     }
-
 }
 
 const loadAddImages = (req, res) => {
@@ -380,6 +444,11 @@ module.exports = {
     loadDashbord,
     loadUserManagement,
     loadAddServices,
+    MainServices,
+    addMainServices,
+    addSubServices,
+    deleteService,
+    deleteSubService,
     loadAllServices,
     loadAddImages,
     loadAllImages,

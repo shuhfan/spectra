@@ -70,9 +70,7 @@ const loadgallery = async (req, res) => {
 
 const loadServices = async (req, res) => {
   try {
-    const [services] = await db.query('SELECT * FROM services');
-
-    res.render('services', { services });
+    res.render('services');
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server Error');
@@ -152,8 +150,17 @@ const loadCareerDetails = async (req, res) => {
   }
 }
 
-const loadWarrantyResgistration = (req,res)=>{
-  res.render('warrenty')
+const loadWarrantyResgistration = async(req,res)=>{
+  try {
+    const [mainServices] = await db.query('SELECT * FROM services');
+    
+    const [subServices] = await db.query('SELECT * FROM sub_services');
+
+    res.render('warrenty', { mainServices, subServices });
+} catch (error) {
+    console.error('Error loading warranty/AMC page:', error);
+    res.status(500).send('Internal Server Error');
+}
 }
 
 const warrantyRegister = async (req, res) => {
@@ -372,6 +379,123 @@ const paymentSuccess = (req, res) => {
   });
 }
 
+const servicePayment = async (req, res) => {
+  const { name, email, whatsapp_number, address_with_pin, main_service, sub_service, remarks, amount } = req.body;
+  const documents = req.files || [];
+
+  try {
+    // Fetch the main service name
+    const [mainResult] = await db.query('SELECT name FROM services WHERE id = ?', [main_service]);
+    const mainServiceName = mainResult.length > 0 ? mainResult[0].name : 'Unknown Main Service';
+
+    // Fetch the sub service name
+    const [subResult] = await db.query('SELECT name FROM sub_services WHERE id = ?', [sub_service]);
+    const subServiceName = subResult.length > 0 ? subResult[0].name : 'Unknown Sub Service';
+
+    // Prepare attachments
+    const attachments = documents.map(file => ({
+      filename: file.originalname,
+      content: file.buffer
+    }));
+
+    // HTML Email Template
+    const emailHtml = `
+      <div style="font-family: Arial, sans-serif; color: #333;">
+        <h2 style="color: #4CAF50;">Booking Confirmation</h2>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+          <tr style="background-color: #f2f2f2;">
+            <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">Field</th>
+            <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">Details</th>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Name</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${name}</td>
+          </tr>
+          <tr style="background-color: #f9f9f9;">
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Email</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${email}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">WhatsApp Number</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${whatsapp_number}</td>
+          </tr>
+          <tr style="background-color: #f9f9f9;">
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Address</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${address_with_pin}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Main Service</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${mainServiceName}</td>
+          </tr>
+          <tr style="background-color: #f9f9f9;">
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Sub Service</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${subServiceName}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Remarks</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${remarks || 'None'}</td>
+          </tr>
+          <tr style="background-color: #f9f9f9;">
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Amount</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">₹${amount}</td>
+          </tr>
+        </table>
+        <p style="margin-top: 20px;">Thank you for choosing our services!</p>
+      </div>
+    `;
+
+    const userMailOptions = {
+      from: process.env.EMAIL,
+      to: email,
+      subject: 'Booking Confirmation',
+      html: emailHtml,  // Use HTML content
+      attachments: attachments
+    };
+
+    const adminMailOptions = {
+      from: process.env.EMAIL,
+      to: process.env.EMAIL,
+      subject: 'New Booking Received',
+      html: emailHtml,  // Use HTML content
+      attachments: attachments
+    };
+
+    await transporter.sendMail(userMailOptions);
+    await transporter.sendMail(adminMailOptions);
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).json({ success: false, message: "Error sending email" });
+  }
+}
+
+const createOrder =  async (req, res) => {
+  const { amount } = req.body;
+
+  try {
+    const order = await razorpayInstance.orders.create({
+      amount: amount * 100,
+      currency: "INR",
+      receipt: "receipt_order_74394"
+    });
+    res.json({ orderId: order.id });
+  } catch (error) {
+    res.status(500).send("Error creating order");
+  }
+}
+
+const getSubServices =  async (req, res) => {
+  const mainServiceId = req.params.id;
+
+  try {
+      const [subServices] = await db.query('SELECT * FROM sub_services WHERE main_service_id = ?', [mainServiceId]);
+      res.json(subServices); // Send back the list of sub-services as JSON
+  } catch (error) {
+      console.error('Error fetching sub-services:', error);
+      res.status(500).json({ message: 'Server error while fetching sub-services', error: error.message });
+  }
+}
+
 const loadLogin = (req, res) => {
   res.render('login')
 }
@@ -513,6 +637,9 @@ module.exports = {
   warrantyRegister,
   verifyPayment,
   paymentSuccess,
+  servicePayment,
+  createOrder,
+  getSubServices,
   loadLogin,
   loadSignup,
   signUp,

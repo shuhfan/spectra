@@ -1,13 +1,10 @@
-
 <div class="page-wrapper">
-
     <%-include('../partials/userHeader')%>
-
 
     <section class="page-title" style="background-image: url(images/background/page-title.jpg);">
         <div class="auto-container">
             <div class="title-outer text-center">
-                <h1 class="title">Services</h1>
+                <h1 class="title">Our Services</h1>
                 <ul class="page-breadcrumb">
                     <li><a href="/">Home</a></li>
                     <li>Services</li>
@@ -15,79 +12,118 @@
             </div>
         </div>
     </section>
-    
 
     <style>
-        .service-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
+        .service-section {
+            margin-bottom: 40px;
             padding: 20px;
-            margin-bottom: 20px;
-            text-align: center;
-            min-height: 270px;
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        .service-card img {
-            max-width: 100%;
+        .service-image {
+            width: 100%;
             height: auto;
             border-radius: 8px;
+            margin-bottom: 15px;
         }
-        .btn-book {
-            margin-top: 15px;
+        .service-title {
+            font-size: 1.8rem;
+            color: #3c6d32;
+            margin-bottom: 15px;
+        }
+        .service-description {
+            font-size: 1rem;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .service-list {
+            padding-left: 20px;
+            list-style-type: disc;
+            color: #444;
         }
     </style>
-</head>
-<body>
 
     <div class="container mt-5">
-        
-        <div class="row">
-            <% services.forEach(service => { %>
-                <div class="service-block col-lg-4 col-md-6 wow fadeInUp">
-                    <div class="inner-box">
-                        <div class="image-box">
-                            <!-- Service Image -->
-                            <figure class="image">
-                                <a href="/services/<%= service.id %>">
-                                    <img alt="<%= service.title %>" src="/uploads/<%= service.image %>">
-                                    <noscript>
-                                        <img src="<%= service.image %>" alt="<%= service.title %>">
-                                    </noscript>
-                                </a>
-                            </figure>
-                        </div>
-                        
-                        <div class="content-box">
-                            <!-- Service Title -->
-                            <h5 class="title">
-                                <a href="/services/<%= service.id %>"><%= service.title %></a>
-                            </h5>
-                            
-                            <!-- Service Description (First 100 Characters) -->
-                            <div class="text">
-                                <%= service.description.substring(0, 100) %>...
-                            </div>
-                            
-                            <!-- Read More Link -->
-                            <a href="/services/<%= service.id %>" class="read-more">
-                                Read More <i class="fa fa-long-arrow-alt-right"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-            <% }) %>
-    
-            <% if (services.length === 0) { %>
-                <div class="col-12">
-                    <div class="alert text-center"style="min-height: 50vh;padding-top: 25vh;">
-                        <strong>No Services Available</strong> - Please check back later.
-                    </div>
-                </div>
-            <% } %>
+        <!-- Geological and Geotechnical Services -->
+        <div class="service-section">
+            <img src="/images/geological-survey.jpg" alt="Geological and Geotechnical Services" class="service-image">
+            <h3 class="service-title">Geological and Geotechnical Services</h3>
+            <p class="service-description">
+                These services focus on understanding ground conditions essential for safe and effective infrastructure projects. 
+                They offer insights into soil, rock, and groundwater behavior to support foundation design.
+            </p>
+            <ul class="service-list">
+                <li>Site investigations and subsurface exploration</li>
+                <li>Soil and rock sampling, testing, and analysis</li>
+                <li>Geotechnical design for foundations, retaining structures, and slope stability</li>
+                <li>Foundation design and ground improvement solutions</li>
+                <li>Geotechnical consultancy for complex projects</li>
+            </ul>
+        </div>
+
+        <!-- Hydrological Services -->
+        <div class="service-section">
+            <img src="/images/Hydrological Services.jpeg" alt="Hydrological Services" class="service-image">
+            <h3 class="service-title">Hydrological Services</h3>
+            <p class="service-description">
+                These services address water-related challenges such as floods, drainage, and resource management through advanced modeling and analysis.
+            </p>
+            <ul class="service-list">
+                <li>Hydrological modeling and flood risk assessments</li>
+                <li>Groundwater studies, well testing, and aquifer evaluation</li>
+                <li>Stormwater management and drainage design</li>
+                <li>Hydrological assessments for infrastructure</li>
+                <li>Water resources management and optimization</li>
+            </ul>
+        </div>
+
+        <!-- Geophysical Services -->
+        <div class="service-section">
+            <img src="/images/Geophysical Services.jpg" alt="Geophysical Services" class="service-image">
+            <h3 class="service-title">Geophysical Services</h3>
+            <p class="service-description">
+                Non-invasive geophysical surveys identify subsurface conditions, site features, contamination, and geological structures.
+            </p>
+            <ul class="service-list">
+                <li>Electrical Resistivity Tomography (ERT)</li>
+                <li>Subsurface investigations for contamination detection</li>
+                <li>Geophysical mapping for infrastructure and environmental projects</li>
+            </ul>
+        </div>
+
+        <!-- Environmental Engineering -->
+        <div class="service-section">
+            <img src="/images/environmental-consultancy.jpg" alt="Environmental Engineering" class="service-image">
+            <h3 class="service-title">Environmental Engineering</h3>
+            <p class="service-description">
+                Environmental services minimize environmental impacts and ensure regulatory compliance, focusing on site contamination, waste management, and sustainability.
+            </p>
+            <ul class="service-list">
+                <li>Water and soil quality monitoring</li>
+                <li>Compliance with environmental regulations and guidelines</li>
+                <li>Sustainable development consultancy</li>
+            </ul>
+        </div>
+
+        <!-- Water and Wastewater Treatment -->
+        <div class="service-section">
+            <img src="/images/water-treatment2.jpg" alt="Water and Wastewater Treatment" class="service-image">
+            <h3 class="service-title">Water and Wastewater Treatment</h3>
+            <p class="service-description">
+                Comprehensive solutions for water and wastewater treatment tailored for municipal, industrial, and commercial needs, ensuring sustainable water use.
+            </p>
+            <ul class="service-list">
+                <li>Design and implementation of water treatment plants (WTP)</li>
+                <li>Wastewater treatment plant (WWTP) design and optimization</li>
+                <li>Water quality assessment and monitoring</li>
+                <li>Customized treatment solutions for various sectors</li>
+                <li>Advanced treatment technologies like membrane filtration, reverse osmosis, chemical coagulation, MBBR, and SBR</li>
+                <li><a href="specterra.com"> click here to see more details</a></li>
+            </ul>
         </div>
     </div>
-        
 
     <%-include('../partials/userFooter')%>
-
 </div>

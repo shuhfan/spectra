@@ -1,25 +1,19 @@
+<!-- add-services.ejs -->
+<%- include('../partials/adminTopBar') %>
+<%- include('../partials/adminNav') %>
 
-
-<%-include('../partials/adminTopBar')%>
-		
-<%-include('../partials/adminNav')%>
-
-    
-<!-- ============================================================== -->
-<!-- 						Content Start	 						-->
-<!-- ============================================================== -->
 <div class="row page-header">
-        <div class="col-lg-6 align-self-center ">
-          <h2>Add Service</h2>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active">Add Service</li>
-            </ol>
-        </div>
-        
+    <div class="col-lg-6 align-self-center ">
+        <h2>Add Service</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Add Service</li>
+        </ol>
+    </div>
 </div>
+
 <style>
-    /* Container styling */
+/* Container styling */
 form {
     max-width: 100%;
     margin: 0;
@@ -37,81 +31,159 @@ form {
 label {
     font-weight: bold;
     color: #333;
-    margin-bottom: 5px;
-    display: block;
 }
 
-.form-control, .form-control-file {
+.form-control {
     border-radius: 4px;
-    border: 1px solid #ddd;
-    padding: 10px;
-    font-size: 1rem;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* Textarea styling */
-textarea.form-control {
-    resize: vertical;
-    min-height: 100px;
 }
 
 /* Submit button styling */
-.btn-block {
+.btn-primary {
     width: 100%;
-    font-size: 1.1rem;
-    font-weight: bold;
-    padding: 12px;
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
 }
-
-.btn-block:hover {
-    background-color: #218838;
-}
-
-.btn-block:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.3);
-}
-
 </style>
 
 <section class="main-content">
+    <div class="container mt-5">
+        <!-- Form for adding main service -->
+        <h2>Add Main Service</h2>
+        <form id="mainServiceForm">
+            <div class="form-group">
+                <label for="mainServiceName">Main Service Name:</label>
+                <input type="text" class="form-control" id="mainServiceName" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Main Service</button>
+        </form>
 
-	
-    <form action="/admin/add-services" method="POST" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="title">Service Title:</label>
-            <input type="text" class="form-control" id="title" name="title" required>
-        </div>
-        <div class="form-group">
-            <label for="description">Description:</label>
-            <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
-        </div>
-        <div class="form-group">
-            <label for="amount">Amount:</label>
-            <input type="number" class="form-control" id="amount" name="amount" required>
-        </div>
-        <div class="form-group">
-            <label for="image">Upload Image:</label>
-            <input type="file" class="form-control-file" id="image" name="image" accept="image/*" required>
-        </div>
-        <button type="submit" class="btn btn-success btn-block">Add Service</button>
-    </form>
-	
-		
-		
-	<footer class="footer">
-		<span>Copyright &copy;  2024 Specterra Geotech Private Limited. All rights reserved.</span>
-	</footer>
+        <!-- Form for adding sub-service -->
+        <h2 class="mt-5">Add Sub-Service</h2>
+        <form id="subServiceForm">
+            <div class="form-group">
+                <label for="subServiceName">Sub-Service Name:</label>
+                <input type="text" class="form-control" id="subServiceName" required>
+            </div>
+            <div class="form-group">
+                <label for="mainServiceSelect">Select Main Service:</label>
+                <select class="form-control" id="mainServiceSelect" required></select>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Sub-Service</button>
+        </form>
+    </div>
+
+    <footer class="footer">
+        <span>Copyright &copy; 2024 Specterra Geotech Private Limited. All rights reserved.</span>
+    </footer>
 
 </section>
-<!-- ============================================================== -->
-<!-- 						Content End		 						-->
-<!-- ============================================================== -->
 
+<!-- Include SweetAlert2 -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<script>
+    document.addEventListener("DOMContentLoaded", async function() {
+        const mainServiceForm = document.getElementById('mainServiceForm');
+        const subServiceForm = document.getElementById('subServiceForm');
+        const mainServiceSelect = document.getElementById('mainServiceSelect');
+    
+        // Fetch main services on page load to populate the dropdown
+        try {
+            const response = await fetch('/admin/services');
+            const services = await response.json();
+            
+            services.forEach(service => {
+                const option = document.createElement('option');
+                option.value = service.id;
+                option.textContent = service.name;
+                mainServiceSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error fetching services:', error);
+            Swal.fire('Error!', 'Failed to load services.', 'error');
+        }
+    
+        // Handle main service form submission
+        mainServiceForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const serviceName = document.getElementById('mainServiceName').value;
+    
+            // Show loading alert
+            Swal.fire({
+                title: 'Adding Main Service...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading(); // Show loading spinner
+                }
+            });
+    
+            try {
+                const response = await fetch('/admin/services', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: serviceName })
+                });
+    
+                if (!response.ok) throw new Error('Network response was not ok');
+    
+                const data = await response.json();
+                
+                // Show success alert
+                await Swal.fire('Success!', 'Main Service Added!', 'success');
+                
+                document.getElementById('mainServiceName').value = ''; // Clear input
+    
+                // Add new option to dropdown
+                const option = document.createElement('option');
+                option.value = data.id;
+                option.textContent = data.name;
+                mainServiceSelect.appendChild(option);
+                
+            } catch (error) {
+                console.error('Error adding main service:', error);
+                await Swal.fire('Error!', 'Failed to add Main Service.', 'error');
+            } finally {
+                Swal.close(); // Close the loading alert
+            }
+        });
+    
+        // Handle sub-service form submission
+        subServiceForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+    
+            const subServiceName = document.getElementById('subServiceName').value;
+            const mainServiceId = mainServiceSelect.value;
+    
+            // Show loading alert
+            Swal.fire({
+                title: 'Adding Sub-Service...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading(); // Show loading spinner
+                }
+            });
+    
+            try {
+                const response = await fetch('/admin/subservices', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: subServiceName, main_service_id: mainServiceId })
+                });
+    
+                if (!response.ok) throw new Error('Network response was not ok');
+    
+                await response.json();
+                
+                // Show success alert
+                await Swal.fire('Success!', 'Sub-Service Added!', 'success');
+    
+                document.getElementById('subServiceName').value = ''; // Clear input
+                
+            } catch (error) {
+                console.error('Error adding sub-service:', error);
+                await Swal.fire('Error!', 'Failed to add Sub-Service.', 'error');
+            } finally {
+                Swal.close(); // Close the loading alert
+            }
+        });
+    });
+    </script>
