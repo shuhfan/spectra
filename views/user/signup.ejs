@@ -218,8 +218,14 @@
 
     <%-include('../partials/userHeader')%>
 
-
+    
+      
     <form class="form_main" action="/signup" method="POST">
+        <% if (messages.error) { %>
+            <div class="alert alert-danger">
+              <%= messages.error %>
+            </div>
+          <% } %>
         <p class="heading">Sign Up</p>
 
         <div class="inputContainer">

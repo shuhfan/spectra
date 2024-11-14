@@ -8,7 +8,7 @@ passport.use(new GoogleStrategy({
     clientID: process.env.clientID,
     clientSecret: process.env.clientSecret,
     callbackURL: process.env.NODE_ENV === 'production' 
-        ? 'https://spectrra.in/auth/google/callback' 
+        ? 'https://specterra.in/auth/google/callback' 
         : '/auth/google/callback'
 }, async (accessToken, refreshToken, profile, done) => {
     try {

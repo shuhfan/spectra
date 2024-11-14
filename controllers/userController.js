@@ -166,31 +166,121 @@ const loadWarrantyResgistration = async(req,res)=>{
 const warrantyRegister = async (req, res) => {
   const { form_name, form_phone, form_email, invoice_no, invoice_date, company_name, company_address } = req.body;
 
-  const mailOptions = {
-      from: process.env.EMAIL,
-      to: process.env.EMAIL, 
-      subject: 'New Warranty Registration',
-      html: `
-          <h2>New Warranty Registration</h2>
-          <p><strong>Name:</strong> ${form_name}</p>
-          <p><strong>Phone:</strong> ${form_phone}</p>
-          <p><strong>Email:</strong> ${form_email}</p>
-          <p><strong>Invoice No:</strong> ${invoice_no}</p>
-          <p><strong>Invoice Date:</strong> ${invoice_date}</p>
-          <p><strong>Company Name:</strong> ${company_name}</p>
-          <p><strong>Company Address:</strong></p>
-          <pre>${company_address}</pre>
-      `
+  // Mail content for admin
+  const adminMailOptions = {
+    from: process.env.EMAIL,
+    to: process.env.EMAIL, // Admin email
+    subject: 'New Warranty Registration',
+    html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; max-width: 600px; margin: auto;">
+        <h2 style="color: #2a9d8f;">New Warranty Registration</h2>
+        <p><strong>Name:</strong> ${form_name}</p>
+        <p><strong>Phone:</strong> ${form_phone}</p>
+        <p><strong>Email:</strong> ${form_email}</p>
+        <p><strong>Invoice No:</strong> ${invoice_no}</p>
+        <p><strong>Invoice Date:</strong> ${invoice_date}</p>
+        <p><strong>Company Name:</strong> ${company_name}</p>
+        <p><strong>Company Address:</strong></p>
+        <pre style="background-color: #f4f4f4; padding: 10px; border-radius: 5px; font-family: monospace;">${company_address}</pre>
+      </div>
+    `
+  };
+
+  // Mail content for user
+  const userMailOptions = {
+    from: process.env.EMAIL,
+    to: form_email, // User email
+    subject: 'Warranty Registration Confirmation',
+    html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; max-width: 600px; margin: auto;">
+        <h2 style="color: #264653;">Warranty Registration Confirmation</h2>
+        <p>Dear ${form_name},</p>
+        <p>Thank you for registering your warranty with us! Below are the details of your warranty registration:</p>
+        <p><strong>Name:</strong> ${form_name}</p>
+        <p><strong>Phone:</strong> ${form_phone}</p>
+        <p><strong>Email:</strong> ${form_email}</p>
+        <p><strong>Invoice No:</strong> ${invoice_no}</p>
+        <p><strong>Invoice Date:</strong> ${invoice_date}</p>
+        <p><strong>Company Name:</strong> ${company_name}</p>
+        <p><strong>Company Address:</strong></p>
+        <pre style="background-color: #f4f4f4; padding: 10px; border-radius: 5px; font-family: monospace;">${company_address}</pre>
+        <p>If you have any questions, please don't hesitate to contact us.</p>
+        <p>Best regards,<br/>Specterra</p>
+      </div>
+    `
   };
 
   try {
-      await transporter.sendMail(mailOptions);
-      res.status(200).json({ message: 'Warranty registration submitted successfully!' });
+    // Send email to admin
+    await transporter.sendMail(adminMailOptions);
+
+    // Send email to user
+    await transporter.sendMail(userMailOptions);
+
+    res.status(200).json({ message: 'Warranty registration submitted successfully!' });
   } catch (error) {
-      console.error('Error sending email:', error);
-      res.status(500).json({ message: 'Error sending email.' });
+    console.error('Error sending email:', error);
+    res.status(500).json({ message: 'Error sending email.' });
   }
-}
+};
+
+const submitAMC = async (req, res) => {
+  const { name, contact, email, companyName, companyAddress } = req.body;
+
+  // Mail content for admin
+  const adminMailOptions = {
+    from: process.env.EMAIL,
+    to: process.env.EMAIL, // Admin email
+    subject: 'New AMC Registration',
+    html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; max-width: 600px; margin: auto;">
+        <h2 style="color: #2a9d8f;">New AMC Registration</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Contact:</strong> ${contact}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Company Name:</strong> ${companyName}</p>
+        <p><strong>Company Address:</strong></p>
+        <pre style="background-color: #f4f4f4; padding: 10px; border-radius: 5px; font-family: monospace;">${companyAddress}</pre>
+      </div>
+    `
+  };
+
+  // Mail content for user
+  const userMailOptions = {
+    from: process.env.EMAIL,
+    to: email, // User email
+    subject: 'AMC Registration Confirmation',
+    html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; max-width: 600px; margin: auto;">
+        <h2 style="color: #264653;">AMC Registration Confirmation</h2>
+        <p>Dear ${name},</p>
+        <p>Thank you for registering for our AMC service. Here are the details of your registration:</p>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Contact:</strong> ${contact}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Company Name:</strong> ${companyName}</p>
+        <p><strong>Company Address:</strong></p>
+        <pre style="background-color: #f4f4f4; padding: 10px; border-radius: 5px; font-family: monospace;">${companyAddress}</pre>
+        <p>We will get back to you shortly with further details.</p>
+        <p>Best regards,<br/>Specterra</p>
+      </div>
+    `
+  };
+
+  try {
+    // Send email to admin
+    await transporter.sendMail(adminMailOptions);
+
+    // Send email to user
+    await transporter.sendMail(userMailOptions);
+
+    res.status(200).json({ message: 'AMC registration submitted successfully!' });
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).json({ message: 'Error sending email.' });
+  }
+};
+
 
 const verifyPayment = async (req, res) => {
   const { razorpay_payment_id, amount, name, contact, email, companyName, companyAddress } = req.body;
@@ -497,11 +587,11 @@ const getSubServices =  async (req, res) => {
 }
 
 const loadLogin = (req, res) => {
-  res.render('login')
+  res.render('login', { messages: req.flash() })
 }
 
 const loadSignup = (req, res) => {
-  res.render('signup',)
+  res.render('signup', { messages: req.flash() })
 }
 
 
@@ -515,7 +605,8 @@ const signUp = async (req, res) => {
   try {
     const [existingUser] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
     if (existingUser.length > 0) {
-      return res.status(400).send('Email Already Exist');
+      req.flash('error', 'This email is already registered. If you have an account, please log in.');
+      return res.redirect('/signup'); 
     }
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -525,6 +616,15 @@ const signUp = async (req, res) => {
     const user = users[0];
 
     req.session.user_id = user.id;
+
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: email,
+      subject: 'Welcome to Our Specterra!',
+      text: `Hello ${name},\n\nThank you for signing up! We are excited to have you with us.\n\nBest regards,\nYour Company Name`
+    };
+
+    await transporter.sendMail(mailOptions);
 
     const redirectUrl = req.session?.originalUrl || '/';
     if (req.session) delete req.session.originalUrl;
@@ -541,7 +641,8 @@ const login = async (req, res) => {
 
   // Check if email and password are provided
   if (!email || !password) {
-      return res.status(400).send('Email and password are required.');
+      req.flash('error', 'Email and password are required.');
+      return res.redirect('/login'); // Redirect back to login with an error message
   }
 
   try {
@@ -550,7 +651,8 @@ const login = async (req, res) => {
 
       // Check if the user exists
       if (users.length === 0) {
-          return res.status(400).send('User does not exist! Create a new account.');
+          req.flash('error', 'User does not exist. Please create a new account.');
+          return res.redirect('/login'); // Redirect back to login with a message
       }
 
       const user = users[0];
@@ -559,7 +661,8 @@ const login = async (req, res) => {
       const isMatch = await bcrypt.compare(password, user.password);
       
       if (!isMatch) {
-          return res.status(400).send('Invalid password.');
+          req.flash('error', 'Invalid password. Please try again.');
+          return res.redirect('/login'); // Redirect back to login with an error message
       }
 
       // Store user ID in session
@@ -571,12 +674,16 @@ const login = async (req, res) => {
       // Clear original URL from session after redirecting
       delete req.session.originalUrl;
 
+      // Redirect the user
       res.redirect(redirectUrl);
+
   } catch (error) {
       console.error('Error during login:', error);
-      res.status(500).send('Server error');
+      req.flash('error', 'Server error. Please try again later.');
+      res.redirect('/login'); // Redirect to login page with error message
   }
 };
+
 
 const logout = (req, res, next) => {
   try {
@@ -635,6 +742,7 @@ module.exports = {
   loadCareerDetails,
   loadWarrantyResgistration,
   warrantyRegister,
+  submitAMC,
   verifyPayment,
   paymentSuccess,
   servicePayment,

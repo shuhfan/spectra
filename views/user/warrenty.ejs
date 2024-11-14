@@ -1,438 +1,558 @@
-
 <div class="page-wrapper">
 
     <%-include('../partials/userHeader')%>
 
 
-    <section class="page-title" style="background-image: url(images/background/page-title.jpg);">
-        <div class="auto-container">
-            <div class="title-outer text-center">
-                <h1 class="title">Warranty/AMC Registration</h1>
-                <ul class="page-breadcrumb">
-                    <li><a href="/">Home</a></li>
-                    <li>Warranty/AMC Registration</li>
-                </ul>
+        <section class="page-title" style="background-image: url(images/background/page-title.jpg);">
+            <div class="auto-container">
+                <div class="title-outer text-center">
+                    <h1 class="title">Warranty/AMC Registration</h1>
+                    <ul class="page-breadcrumb">
+                        <li><a href="/">Home</a></li>
+                        <li>Warranty/AMC Registration</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <style>
+            body {
+                background-color: #f8f9fa;
+            }
+
+            .tab-content {
+                margin-top: 20px;
+                padding: 20px;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .tab-pane {
+                display: none;
+                /* Hide all tab content by default */
+            }
+
+            .tab-pane.active {
+                display: block;
+                /* Show active tab content */
+            }
+        </style>
+        <div class="container mt-5">
+
+            <!-- Tabs -->
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="warranty-tab" data-toggle="tab" href="#warranty" role="tab"
+                        aria-controls="warranty" aria-selected="true">Warranty Registration</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="amc-tab" data-toggle="tab" href="#amc" role="tab" aria-controls="amc"
+                        aria-selected="false">AMC Registration</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="booking-tab" data-toggle="tab" href="#booking" role="tab"
+                        aria-controls="booking" aria-selected="false">Service Booking</a>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="myTabContent">
+                <!-- Warranty Registration Tab -->
+                <div class="tab-pane fade show active" id="warranty" role="tabpanel" aria-labelledby="warranty-tab">
+                    <form id="warrantyForm">
+                        <div class="form-group">
+                            <label for="warrantyName">Name</label>
+                            <input type="text" class="form-control" id="warrantyName" name="form_name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="warrantyContact">Contact</label>
+                            <input type="tel" class="form-control" id="warrantyContact" name="form_phone" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="warrantyEmail">Email</label>
+                            <input type="email" class="form-control" id="warrantyEmail" name="form_email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="invoiceNo">Invoice No.</label>
+                            <input type="text" class="form-control" id="invoiceNo" name="invoice_no">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="invoiceDate">Invoice Date</label>
+                            <input type="date" class="form-control" id="invoiceDate" name="invoice_date">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="companyNameWarranty">Company Name</label>
+                            <input type="text" class="form-control" id="companyNameWarranty" name="company_name"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="companyAddressWarranty">Company Address with Pincode</label>
+                            <textarea class="form-control" id="companyAddressWarranty" name="company_address" rows="3"
+                                required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn mt-2 btn-success btn-block">Submit Warranty
+                            Registration</button>
+                    </form>
+                </div>
+
+                <!-- AMC Registration Tab -->
+                <div class="tab-pane fade" id="amc" role="tabpanel" aria-labelledby="amc-tab">
+                    <form id="amcForm">
+                        <div class="form-group">
+                            <label for="amcName">Name</label>
+                            <input type="text" class="form-control" id="amcName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="amcContact">Contact</label>
+                            <input type="tel" class="form-control" id="amcContact" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="amcEmail">Email</label>
+                            <input type="email" class="form-control" id="amcEmail" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="amcCompanyName">Company Name</label>
+                            <input type="text" class="form-control" id="amcCompanyName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="amcCompanyAddress">Company Address with Pincode</label>
+                            <textarea class="form-control" id="amcCompanyAddress" rows="3" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="amcAmount">Amount</label>
+                            <input type="number" class="form-control" id="amcAmount" required>
+                        </div>
+
+                        <button type="button" class="btn mt-2 btn-success btn-block"
+                            onclick="submitForm()">Submit</button>
+                        <!-- Submit Button -->
+                        <button type="button" class="btn mt-2 btn-success btn-block" onclick="payNow()">Pay Now</button>
+                    </form>
+                </div>
+                <!-- Service Booking Tab -->
+                <div class='tab-pane fade' id='booking' role='tabpanel' aria-labelledby='booking-tab'>
+                    <form id='bookingForm' enctype="multipart/form-data"> <!-- Add enctype for file upload -->
+                        <div class='form-group'>
+                            <label for='bookingName'>Name</label>
+                            <input type='text' class='form-control' id='bookingName' name='name' required />
+                        </div>
+                        <div class='form-group'>
+                            <label for='bookingEmail'>Email</label>
+                            <input type='email' class='form-control' id='bookingEmail' name='email' required />
+                        </div>
+                        <div class='form-group'>
+                            <label for='bookingWhatsApp'>WhatsApp Number</label>
+                            <input type='tel' class='form-control' id='bookingWhatsApp' name='whatsapp_number'
+                                required />
+                        </div>
+                        <div class='form-group'>
+                            <label for='bookingAddress'>Address with Pincode</label>
+                            <textarea class='form-control' id='bookingAddress' name='address_with_pin' rows=3
+                                required></textarea>
+                        </div>
+
+                        <!-- Main Service Dropdown -->
+                        <div class='form-group'>
+                            <label for='mainServiceSelect'>Main Service</label>
+                            <select class='form-control' id='mainServiceSelect' name='main_service' required>
+                                <% mainServices.forEach((service, index)=> { %>
+                                    <option value="<%= service.id %>" <% if (index===0) { %>selected<% } %>><%=
+                                                service.name %>
+                                    </option>
+                                    <% }); %>
+                            </select>
+                        </div>
+
+                        <!-- Sub Service Dropdown -->
+                        <div class='form-group'>
+                            <label for='subServiceSelect'>Sub Service</label>
+                            <select class='form-control' id='subServiceSelect' name='sub_service' required></select>
+                            <!-- Will be populated based on main service selection -->
+                        </div>
+
+                        <!-- Remarks or Message -->
+                        <div class="form-group">
+                            <label for="remarks">Remarks or Message</label>
+                            <textarea class="form-control" id="remarks" name="remarks"></textarea>
+                        </div>
+
+                        <!-- Amount -->
+                        <div class="form-group">
+                            <label for="amount">Amount</label>
+                            <input type="number" class="form-control" id="amount" name="amount" />
+                        </div>
+
+                        <!-- File Upload -->
+                        <div class="form-group">
+                            <label for="userDocuments">Upload Documents</label>
+                            <input type="file" class="form-control-file" id="userDocuments" name="documents" multiple />
+                            <!-- Allow multiple file uploads -->
+                            <br><small class="form-text text-muted">You can upload multiple files (PDF, images,
+                                etc.).</small>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-success btn-block" id="submitBookingButton">Submit
+                            Booking</button>
+                        <button type="submit" class="btn btn-success btn-block" id="payNowButton"
+                            style="display: none;">Pay Now</button>
+
+                    </form>
+                </div>
             </div>
         </div>
-    </section>
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .tab-content {
-            margin-top: 20px;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        .tab-pane {
-            display: none; /* Hide all tab content by default */
-        }
-        .tab-pane.active {
-            display: block; /* Show active tab content */
-        }
-    </style>
-    <div class="container mt-5">
-        
-        <!-- Tabs -->
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="warranty-tab" data-toggle="tab" href="#warranty" role="tab" aria-controls="warranty" aria-selected="true">Warranty Registration</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="amc-tab" data-toggle="tab" href="#amc" role="tab" aria-controls="amc" aria-selected="false">AMC Registration</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="booking-tab" data-toggle="tab" href="#booking" role="tab" aria-controls="booking" aria-selected="false">Service Booking</a>
-            </li>
-        </ul>
-    
-        <!-- Tab Content -->
-        <div class="tab-content" id="myTabContent">
-            <!-- Warranty Registration Tab -->
-            <div class="tab-pane fade show active" id="warranty" role="tabpanel" aria-labelledby="warranty-tab">
-                <form id="warrantyForm">
-                    <div class="form-group">
-                        <label for="warrantyName">Name</label>
-                        <input type="text" class="form-control" id="warrantyName" name="form_name" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="warrantyContact">Contact</label>
-                        <input type="tel" class="form-control" id="warrantyContact" name="form_phone" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="warrantyEmail">Email</label>
-                        <input type="email" class="form-control" id="warrantyEmail" name="form_email" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="invoiceNo">Invoice No.</label>
-                        <input type="text" class="form-control" id="invoiceNo" name="invoice_no">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="invoiceDate">Invoice Date</label>
-                        <input type="date" class="form-control" id="invoiceDate" name="invoice_date">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="companyNameWarranty">Company Name</label>
-                        <input type="text" class="form-control" id="companyNameWarranty" name="company_name" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="companyAddressWarranty">Company Address with Pincode</label>
-                        <textarea class="form-control" id="companyAddressWarranty" name="company_address" rows="3" required></textarea>
-                    </div>
-
-                    <button type="submit" class="btn mt-2 btn-success btn-block">Submit Warranty Registration</button>
-                </form>
-            </div>
-    
-            <!-- AMC Registration Tab -->
-            <div class="tab-pane fade" id="amc" role="tabpanel" aria-labelledby="amc-tab">
-                <form id="amcForm">
-                    <div class="form-group">
-                        <label for="amcName">Name</label>
-                        <input type="text" class="form-control" id="amcName" required>
-                    </div>
-            
-                    <div class="form-group">
-                        <label for="amcContact">Contact</label>
-                        <input type="tel" class="form-control" id="amcContact" required>
-                    </div>
-            
-                    <div class="form-group">
-                        <label for="amcEmail">Email</label>
-                        <input type="email" class="form-control" id="amcEmail" required>
-                    </div>
-            
-                    <div class="form-group">
-                        <label for="amcCompanyName">Company Name</label>
-                        <input type="text" class="form-control" id="amcCompanyName" required>
-                    </div>
-            
-                    <div class="form-group">
-                        <label for="amcCompanyAddress">Company Address with Pincode</label>
-                        <textarea class="form-control" id="amcCompanyAddress" rows="3" required></textarea>
-                    </div>
-            
-                    <div class="form-group">
-                        <label for="amcAmount">Amount</label>
-                        <input type="number" class="form-control" id="amcAmount" required>
-                    </div>
-            
-                    <!-- Submit Button -->
-                    <button type="button" class="btn mt-2 btn-success btn-block" onclick="payNow()">Pay Now</button>
-                </form>
-            </div>
-            <!-- Service Booking Tab -->
-            <div class='tab-pane fade' id='booking' role='tabpanel' aria-labelledby='booking-tab'>
-                <form id='bookingForm' enctype="multipart/form-data"> <!-- Add enctype for file upload -->
-                    <div class='form-group'>
-                        <label for='bookingName'>Name</label>
-                        <input type='text' class='form-control' id='bookingName' name='name' required />
-                    </div>
-                    <div class='form-group'>
-                        <label for='bookingEmail'>Email</label>
-                        <input type='email' class='form-control' id='bookingEmail' name='email' required />
-                    </div>
-                    <div class='form-group'>
-                        <label for='bookingWhatsApp'>WhatsApp Number</label>
-                        <input type='tel' class='form-control' id='bookingWhatsApp' name='whatsapp_number' required />
-                    </div>
-                    <div class='form-group'>
-                        <label for='bookingAddress'>Address with Pincode</label>
-                        <textarea class='form-control' id='bookingAddress' name='address_with_pin' rows=3 required></textarea>
-                    </div>
-            
-                    <!-- Main Service Dropdown -->
-                    <div class='form-group'>
-                        <label for='mainServiceSelect'>Main Service</label>
-                        <select class='form-control' id='mainServiceSelect' name='main_service' required>
-                            <% mainServices.forEach((service, index) => { %>
-                                <option value="<%= service.id %>" <% if (index === 0) { %>selected<% } %>><%= service.name %></option>
-                            <% }); %>
-                        </select>
-                    </div>
-            
-                    <!-- Sub Service Dropdown -->
-                    <div class='form-group'>
-                        <label for='subServiceSelect'>Sub Service</label>
-                        <select class='form-control' id='subServiceSelect' name='sub_service' required></select> <!-- Will be populated based on main service selection -->
-                    </div>
-            
-                    <!-- Remarks or Message -->
-                    <div class="form-group">
-                        <label for="remarks">Remarks or Message</label>
-                        <textarea class="form-control" id="remarks" name="remarks"></textarea>
-                    </div>
-            
-                    <!-- Amount -->
-                    <div class="form-group">
-                        <label for="amount">Amount</label>
-                        <input type="number" class="form-control" id="amount" name="amount" required />
-                    </div>
-            
-                    <!-- File Upload -->
-                    <div class="form-group">
-                        <label for="userDocuments">Upload Documents</label>
-                        <input type="file" class="form-control-file" id="userDocuments" name="documents" multiple /> <!-- Allow multiple file uploads -->
-                        <br><small class="form-text text-muted">You can upload multiple files (PDF, images, etc.).</small>
-                    </div>
-            
-                    <!-- Submit Button -->
-                    <button type="submit" class="btn btn-success btn-block">Submit Booking</button>
-                </form>
-            </div>
-        </div >
-    </div >
-    <script src="//code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Optional: Add any JavaScript functionality if needed
-        $(document).ready(function() {
-            $('#myTab a').on('click', function (e) {
-                e.preventDefault();
-                $(this).tab('show');
+        <script src="//code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Optional: Add any JavaScript functionality if needed
+            $(document).ready(function () {
+                $('#myTab a').on('click', function (e) {
+                    e.preventDefault();
+                    $(this).tab('show');
+                });
             });
-        });
-    </script>
-<script>
-    $(document).ready(function() {
-        $('#warrantyForm').on('submit', function(event) {
-            event.preventDefault();
+        </script>
+        <script>
+            $(document).ready(function () {
+                $('#warrantyForm').on('submit', function (event) {
+                    event.preventDefault();
 
-            const formData = $(this).serialize();
+                    const formData = $(this).serialize();
 
-            Swal.fire({
-                title: 'Submitting...',
-                text: 'Please wait while your warranty is being registered.',
-                icon: 'info',
-                allowOutsideClick: false,
-                showCancelButton: false,
-                showConfirmButton: false,
-                willOpen: () => {
-                    Swal.showLoading();
-                }
-            });
-
-            $.ajax({
-                url: '/register-warranty',
-                type: 'POST',
-                data: formData,
-                success: function(response) {
                     Swal.fire({
-                        title: 'Success!',
-                        text: response.message,
-                        icon: 'success',
-                        showConfirmButton: true
+                        title: 'Submitting...',
+                        text: 'Please wait while your warranty is being registered.',
+                        icon: 'info',
+                        allowOutsideClick: false,
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        willOpen: () => {
+                            Swal.showLoading();
+                        }
                     });
-                    $('#warrantyForm')[0].reset();
-                },
-                error: function(xhr) {
+
+                    $.ajax({
+                        url: '/register-warranty',
+                        type: 'POST',
+                        data: formData,
+                        success: function (response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: true
+                            });
+                            $('#warrantyForm')[0].reset();
+                        },
+                        error: function (xhr) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: xhr.responseJSON.message || 'There was an error sending your message.',
+                                icon: 'error',
+                                showConfirmButton: true
+                            });
+                        }
+                    });
+                });
+            });
+        </script>
+
+        <script>
+            function payNow() {
+                const name = document.getElementById('amcName').value;
+                const contact = document.getElementById('amcContact').value;
+                const email = document.getElementById('amcEmail').value;
+                const companyName = document.getElementById('amcCompanyName').value;
+                const companyAddress = document.getElementById('amcCompanyAddress').value;
+                const amount = document.getElementById('amcAmount').value;
+
+                if (!name || !contact || !email || !companyName || !companyAddress || !amount) {
                     Swal.fire({
-                        title: 'Error!',
-                        text: xhr.responseJSON.message || 'There was an error sending your message.',
-                        icon: 'error',
-                        showConfirmButton: true
+                        icon: 'warning',
+                        title: 'Missing Information',
+                        text: 'Please fill out all fields before proceeding.'
                     });
+                    return;
                 }
-            });
-        });
-    });
-</script>
 
-<script>
-    function payNow() {
-        const name = document.getElementById('amcName').value;
-        const contact = document.getElementById('amcContact').value;
-        const email = document.getElementById('amcEmail').value;
-        const companyName = document.getElementById('amcCompanyName').value;
-        const companyAddress = document.getElementById('amcCompanyAddress').value;
-        const amount = document.getElementById('amcAmount').value;
-
-        if (!name || !contact || !email || !companyName || !companyAddress || !amount) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Missing Information',
-                text: 'Please fill out all fields before proceeding.'
-            });
-            return;
-        }
-
-        var options = {
-            "key": "rzp_test_wYINav8ro4ngpH",
-            "amount": amount * 100, // Amount is in currency subunits. Default currency is INR. Hence, amount is in paise
-            "currency": "INR",
-            "name": companyName,
-            "description": "AMC Payment",
-            "image": "/images/logo.png", // Optional
-            "handler": function (response) {
-                $.ajax({
-                    url: '/verify-payment', // Your backend endpoint to verify payment
-                    type: 'POST',
-                    data: {
-                        razorpay_payment_id: response.razorpay_payment_id,
-                        amount: amount,
-                        name: name,
-                        contact: contact,
-                        email: email,
-                        companyName: companyName,
-                        companyAddress: companyAddress
+                var options = {
+                    "key": "rzp_test_wYINav8ro4ngpH",
+                    "amount": amount * 100, // Amount is in currency subunits. Default currency is INR. Hence, amount is in paise
+                    "currency": "INR",
+                    "name": companyName,
+                    "description": "AMC Payment",
+                    "image": "/images/logo.png", // Optional
+                    "handler": function (response) {
+                        $.ajax({
+                            url: '/verify-payment', // Your backend endpoint to verify payment
+                            type: 'POST',
+                            data: {
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                amount: amount,
+                                name: name,
+                                contact: contact,
+                                email: email,
+                                companyName: companyName,
+                                companyAddress: companyAddress
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Payment Success',
+                                        text: 'Payment has been successfully made.'
+                                    });
+                                    $('#amcForm')[0].reset();
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Payment Verification Failed',
+                                        text: 'There was an error verifying your payment: ' + response.message
+                                    });
+                                }
+                            },
+                            error: function (xhr) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Payment Verification Failed',
+                                    text: xhr.responseJSON.message || 'There was an error verifying your payment.'
+                                });
+                            }
+                        });
                     },
-                    success: function (response) {
-                        if (response.success) {
+                    "prefill": {
+                        "name": name,
+                        "email": email,
+                        "contact": contact
+                    },
+                    "notes": {
+                        "address": companyAddress
+                    },
+                    "theme": {
+                        "color": "#3399cc"
+                    }
+                };
+
+                var rzp1 = new Razorpay(options);
+
+                rzp1.on('payment.failed', function (response) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Payment Failed',
+                        text: 'Payment failed: ' + response.error.description
+                    });
+                });
+
+                rzp1.open();
+            }
+
+            // Function to handle form submission (without payment)
+            function submitForm() {
+                const form = document.getElementById('amcForm');
+
+                // Get form values
+                const formData = {
+                    name: document.getElementById('amcName').value,
+                    contact: document.getElementById('amcContact').value,
+                    email: document.getElementById('amcEmail').value,
+                    companyName: document.getElementById('amcCompanyName').value,
+                    companyAddress: document.getElementById('amcCompanyAddress').value
+                };
+
+                // Check if all fields are filled
+                if (!formData.name || !formData.contact || !formData.email || !formData.companyName || !formData.companyAddress) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Missing Information',
+                        text: 'Please fill out all fields before submitting the form.'
+                    });
+                    return;
+                }
+
+                // Send form data to your backend (this will trigger the email sending)
+                fetch('/submitAmcForm', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message === 'AMC registration submitted successfully!') {
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Payment Success',
-                                text: 'Payment has been successfully made.'
+                                title: 'Success!',
+                                text: 'Your AMC registration has been submitted successfully.',
+                                confirmButtonText: 'OK'
                             });
-                            $('#amcForm')[0].reset();
                         } else {
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Payment Verification Failed',
-                                text: 'There was an error verifying your payment: ' + response.message
+                                title: 'Error',
+                                text: 'There was an issue submitting your form. Please try again later.',
+                                confirmButtonText: 'OK'
                             });
                         }
-                    },
-                    error: function (xhr) {
+                        form.reset();  // Reset form after submission
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
                         Swal.fire({
                             icon: 'error',
-                            title: 'Payment Verification Failed',
-                            text: xhr.responseJSON.message || 'There was an error verifying your payment.'
+                            title: 'Error',
+                            text: 'There was an error submitting the form. Please try again later.',
+                            confirmButtonText: 'OK'
                         });
+                    });
+            }
+
+        </script>
+
+
+        <script>
+            $(document).ready(function () {
+                // Function to fetch sub-services based on selected main service
+                function fetchSubServices(mainServiceId) {
+                    $.ajax({
+                        url: `/get-sub-services/${mainServiceId}`, // Adjust this endpoint as needed
+                        method: 'GET',
+                        success: function (data) {
+                            const subServiceSelect = $('#subServiceSelect');
+                            subServiceSelect.empty(); // Clear existing options
+                            data.forEach(subService => {
+                                subServiceSelect.append(new Option(subService.name, subService.id));
+                            });
+                        },
+                        error: function (err) {
+                            console.error('Error fetching sub-services:', err);
+                        }
+                    });
+                }
+
+                // On page load, fetch sub-services for the first selected main service
+                const initialMainServiceId = $('#mainServiceSelect').val();
+                fetchSubServices(initialMainServiceId);
+
+                // Change event for main service selection
+                $('#mainServiceSelect').change(function () {
+                    const mainServiceId = $(this).val();
+                    fetchSubServices(mainServiceId);
+                });
+
+                document.getElementById('bookingForm').addEventListener('submit', async function (event) {
+                    event.preventDefault();
+
+                    const formData = new FormData(event.target);
+                    const amount = formData.get('amount');
+                    const isPayNow = event.submitter.id === 'payNowButton';
+
+                    if (isPayNow) {
+                        // Create order for Razorpay
+                        const orderResponse = await fetch('/create-order', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ amount })
+                        });
+                        const { orderId } = await orderResponse.json();
+
+                        const options = {
+                            key: "rzp_test_wYINav8ro4ngpH",
+                            amount: amount * 100,
+                            currency: "INR",
+                            name: "Booking Payment",
+                            description: "Service booking",
+                            order_id: orderId,
+                            handler: function (response) {
+                                // Show success alert immediately after successful payment
+                                Swal.fire('Payment Successful!', 'Your payment has been received.', 'success');
+
+                                // Call completeBooking but do not wait for it to finish before clearing the form
+                                completeBooking(formData);
+
+                                // Clear the form data after successful payment
+                                $('#bookingForm')[0].reset();
+                            },
+                            prefill: {
+                                name: formData.get('name'),
+                                email: formData.get('email'),
+                                contact: formData.get('whatsapp_number')
+                            }
+                        };
+
+                        const rzp = new Razorpay(options);
+                        rzp.open();
+                    } else {
+                        // Handle submission without payment (for "Submit Booking" button)
+                        // For example, send email to admin and user here
+                        await completeBooking(formData);
+
+                        // Show a confirmation message to the user
+                        Swal.fire('Booking Successful!', 'Your booking has been received.', 'success');
+
+                        // Clear the form data after successful booking
+                        $('#bookingForm')[0].reset();
                     }
                 });
-            },
-            "prefill": {
-                "name": name,
-                "email": email,
-                "contact": contact
-            },
-            "notes": {
-                "address": companyAddress
-            },
-            "theme": {
-                "color": "#3399cc"
-            }
-        };
 
-        var rzp1 = new Razorpay(options);
+                async function completeBooking(formData) {
+                    try {
+                        const response = await fetch('/submit-booking', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        const result = await response.json();
 
-        rzp1.on('payment.failed', function (response) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Payment Failed',
-                text: 'Payment failed: ' + response.error.description
-            });
-        });
-
-        rzp1.open();
-    }
-</script>
-
-
-<script>
-    $(document).ready(function() {
-        // Function to fetch sub-services based on selected main service
-        function fetchSubServices(mainServiceId) {
-            $.ajax({
-                url: `/get-sub-services/${mainServiceId}`, // Adjust this endpoint as needed
-                method: 'GET',
-                success: function(data) {
-                    const subServiceSelect = $('#subServiceSelect');
-                    subServiceSelect.empty(); // Clear existing options
-                    data.forEach(subService => {
-                        subServiceSelect.append(new Option(subService.name, subService.id));
-                    });
-                },
-                error: function(err) {
-                    console.error('Error fetching sub-services:', err);
+                        if (result.success) {
+                            // Show booking success message, no need for delay
+                            Swal.fire('Booking Confirmed!', 'Your booking has been successfully submitted.', 'success');
+                        } else {
+                            Swal.fire('Booking Failed', 'Something went wrong. Please try again.', 'error');
+                        }
+                    } catch (error) {
+                        Swal.fire('Error', 'An error occurred during submission.', 'error');
+                    }
                 }
             });
-        }
-    
-        // On page load, fetch sub-services for the first selected main service
-        const initialMainServiceId = $('#mainServiceSelect').val();
-        fetchSubServices(initialMainServiceId);
-    
-        // Change event for main service selection
-        $('#mainServiceSelect').change(function() {
-            const mainServiceId = $(this).val();
-            fetchSubServices(mainServiceId);
-        });
-    
-        document.getElementById('bookingForm').addEventListener('submit', async function (event) {
-            event.preventDefault();
-    
-            const formData = new FormData(event.target);
-            const amount = formData.get('amount');
-    
-            // Create order for Razorpay
-            const orderResponse = await fetch('/create-order', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ amount })
-            });
-            const { orderId } = await orderResponse.json();
-    
-            const options = {
-                key: "rzp_test_wYINav8ro4ngpH",
-                amount: amount * 100,
-                currency: "INR",
-                name: "Booking Payment",
-                description: "Service booking",
-                order_id: orderId,
-                handler: function (response) {
-                    // Show success alert immediately after successful payment
-                    Swal.fire('Payment Successful!', 'Your payment has been received.', 'success');
-    
-                    // Call completeBooking but do not wait for it to finish before clearing the form
-                    completeBooking(formData);
-    
-                    // Clear the form data after successful payment
-                    $('#bookingForm')[0].reset();
-                },
-                prefill: {
-                    name: formData.get('name'),
-                    email: formData.get('email'),
-                    contact: formData.get('whatsapp_number')
-                }
-            };
-    
-            const rzp = new Razorpay(options);
-            rzp.open();
-        });
-    
-        async function completeBooking(formData) {
-            try {
-                const response = await fetch('/submit-booking', {
-                    method: 'POST',
-                    body: formData
-                });
-                const result = await response.json();
-    
-                if (result.success) {
-                    // Show booking success message, no need for delay
-                    Swal.fire('Booking Confirmed!', 'Your booking has been successfully submitted.', 'success');
+
+            function toggleButtons() {
+                const amountField = document.getElementById('amount');
+                const payNowButton = document.getElementById('payNowButton');
+                const submitBookingButton = document.getElementById('submitBookingButton');
+
+                if (amountField.value.trim() !== '') {
+                    // If Amount field has data, show Pay Now button and hide Submit button
+                    payNowButton.style.display = 'block';
+                    submitBookingButton.style.display = 'none';
                 } else {
-                    Swal.fire('Booking Failed', 'Something went wrong. Please try again.', 'error');
+                    // If Amount field is empty, show Submit button and hide Pay Now button
+                    payNowButton.style.display = 'none';
+                    submitBookingButton.style.display = 'block';
                 }
-            } catch (error) {
-                Swal.fire('Error', 'An error occurred during submission.', 'error');
             }
-        }
-    });
-    </script>
-    
+
+            // Event listener to monitor changes in the Amount field
+            document.getElementById('amount').addEventListener('input', toggleButtons);
+
+            // Call toggleButtons on page load in case the Amount field has data already (pre-filled)
+            window.addEventListener('load', toggleButtons);
+        </script>
 
 
-    <%-include('../partials/userFooter')%>
+
+        <%-include('../partials/userFooter')%>
 
 </div>

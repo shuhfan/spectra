@@ -196,6 +196,11 @@
 
     
     <form class="form_main" action="/login" method="post">
+        <% if (messages.error) { %>
+            <div class="alert alert-danger">
+              <%= messages.error %>
+            </div>
+          <% } %>
         <p class="heading">Login</p>
         <div class="inputContainer">
             <svg viewBox="0 0 16 16" fill="#2e2e2e" height="16" width="16" xmlns="http://www.w3.org/2000/svg" class="inputIcon">
