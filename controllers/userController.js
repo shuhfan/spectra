@@ -1,5 +1,6 @@
 const db = require('../config/db')
 const bcrypt = require('bcrypt')
+const crypto = require('crypto');
 const nodemailer = require('nodemailer')
 const env = require('dotenv').config();
 const path = require('path');
@@ -729,6 +730,105 @@ const loadProfile = async(req,res)=>{
   }
 }
 
+const loadForgotPassword = (req,res)=>{
+  res.render('forgot-password')
+}
+
+const forgotPassword =  async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    // Check if user exists
+    const [user] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+    if (!user.length) {
+        return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+
+    // Generate a token
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiration = new Date(Date.now() + 3600000); // 1 hour from now
+
+    // Save the token and expiration in the database
+    await db.query(
+        'UPDATE users SET reset_token = ?, reset_token_expiration = ? WHERE email = ?',
+        [token, expiration, email]
+    );
+
+    // Email content
+    const resetLink = `http://localhost:3000/reset-password?token=${token}`;
+    const mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: 'Password Reset Request',
+        html: `
+            <h1>Password Reset</h1>
+            <p>Hi ${user[0].name},</p>
+            <p>You requested to reset your password. Click the link below to proceed:</p>
+            <a href="${resetLink}" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; display: inline-block;">Reset Password</a>
+            <p>If you did not request this, you can safely ignore this email.</p>
+            <p>Thanks,</p>
+            <p>Specterra</p>
+        `
+    };
+
+    // Send email
+    await transporter.sendMail(mailOptions);
+
+    res.json({ success: true, message: 'Password reset link has been sent to your email.' });
+} catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Error processing request.' });
+}
+}
+
+const resetPassword = async (req, res) => {
+  try {
+      const { token, newPassword } = req.body;
+
+      if (!token || !newPassword) {
+          console.error("Missing token or new password");
+          return res.status(400).json({ message: 'Invalid input.' });
+      }
+
+      // Fetch user using the reset token and check expiration
+      const [user] = await db.query(
+          'SELECT * FROM users WHERE reset_token = ? AND reset_token_expiration > ?',
+          [token, new Date()]
+      );
+
+      if (!user.length) {
+          console.error("Invalid or expired token");
+          return res.status(400).json({ message: 'Invalid or expired token.' });
+      }
+
+      // Hash the new password
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      // Update the user's password and clear reset token
+      await db.query(
+          'UPDATE users SET password = ?, reset_token = NULL, reset_token_expiration = NULL WHERE id = ?',
+          [hashedPassword, user[0].id]
+      );
+
+      console.log("Password reset successful for user:", user[0].email);
+      res.json({ message: 'Password has been reset successfully.' });
+  } catch (error) {
+      console.error("Error resetting password:", error);
+      res.status(500).json({ message: 'Internal server error.' });
+  }
+};
+
+const loadResetPassword =  (req, res) => {
+  const { token } = req.query; // Extract token from query parameters
+
+  if (!token) {
+      return res.status(400).send('Invalid or missing token.');
+  }
+
+  // Serve the reset password form HTML (adjust the path to your file)
+  res.render('reset-password')
+}
+
 module.exports = {
   loadHome,
   loadAboutUs,
@@ -758,4 +858,8 @@ module.exports = {
   loadShippingPolicy,
   loadRefundPolicy,
   loadProfile,
+  loadForgotPassword,
+  forgotPassword,
+  resetPassword,
+  loadResetPassword,
 }
